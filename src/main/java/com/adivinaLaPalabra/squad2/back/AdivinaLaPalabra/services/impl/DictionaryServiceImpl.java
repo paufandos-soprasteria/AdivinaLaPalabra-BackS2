@@ -4,4 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DictionaryServiceImpl {
+    public String hello(){
+        return "HELLO WORLD!!";
+    }
 }

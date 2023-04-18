@@ -1,6 +1,5 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity

@@ -11,7 +11,8 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int id;
 
-    public String correct_word;
-
-    public Date start_date;
+    @Column(name = "correct_word")
+    public String correctWord;
+    @Column(name = "start_date")
+    public Date startDate;
 }

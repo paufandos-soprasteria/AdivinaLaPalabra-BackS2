@@ -16,7 +16,7 @@ public class DictionaryController {
     public DictionaryServiceImpl dictionaryService;
 
     @GetMapping("/checkIfWordExists/{word}")
-    ResponseEntity<Boolean> checkIfWordExists(@PathVariable("word") String word) {
+    ResponseEntity<?> checkIfWordExists(@PathVariable("word") String word) {
         return new ResponseEntity<Boolean>(dictionaryService.checkIfWordExists(word), HttpStatus.OK);
     }
 }

@@ -10,6 +10,14 @@ public class Dictionary {
     public int id;
     public String word;
 
+    public Dictionary() {
+    }
+
+    public Dictionary(int id, String word) {
+        this.id = id;
+        this.word = word;
+    }
+
     public int getId() {
         return id;
     }

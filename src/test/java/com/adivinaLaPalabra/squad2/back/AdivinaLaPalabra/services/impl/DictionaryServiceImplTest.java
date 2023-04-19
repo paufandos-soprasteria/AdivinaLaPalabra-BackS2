@@ -1,5 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -23,10 +24,21 @@ public class DictionaryServiceImplTest {
 
     @Test
     void testCheckIfWordExistsMustReturnTrueIfWordExist() {
-        Dictionary dictionaryWord = new Dictionary();
-        when(dictionaryRepository.findByWord("coche")).thenReturn(dictionaryWord);
+        final Dictionary EXISTING_WORD_IN_THE_DICTIONARY = new Dictionary(1, "abaca");
+        when(dictionaryRepository.findByWord(EXISTING_WORD_IN_THE_DICTIONARY.getWord())).thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
 
-        Boolean assertDictionaryWord = dictionaryServiceImpl.checkIfWordExists("coche");
+        Boolean assertDictionaryWord = dictionaryServiceImpl.checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getWord());
+        
         assertTrue(assertDictionaryWord);
+    }
+
+    @Test
+    void testCheckIfWordExistsMustReturnFalseIfWordNotExist() {
+        final String NONEXISTENT_WORD_IN_THE_DICTIONARY = "aaaaa";
+        when(dictionaryRepository.findByWord(NONEXISTENT_WORD_IN_THE_DICTIONARY)).thenReturn(null);
+
+        Boolean assertDictionaryWord = dictionaryServiceImpl.checkIfWordExists(NONEXISTENT_WORD_IN_THE_DICTIONARY);
+
+        assertFalse(assertDictionaryWord);
     }
 }

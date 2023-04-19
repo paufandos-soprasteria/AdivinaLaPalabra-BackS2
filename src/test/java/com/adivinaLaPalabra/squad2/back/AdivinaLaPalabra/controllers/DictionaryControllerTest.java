@@ -12,19 +12,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class DictionaryControllerTest {
 
+    final String BASE_URL = "http://localhost:8080/";
+
     @Autowired
     MockMvc mockMvc;
 
     @Test
     void testBadURLRequestMustReturn404Status() throws Exception {
-        final String BAD_URL = "http://localhost:8080/checkIfWordExists/";
+        final String BAD_URL = BASE_URL + "/NotNonexistentURL";
+
         this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testCheckIfwordExtistMustReturnOKStatus() throws Exception {
-        final String OK_URL = "http://localhost:8080/checkIfWordExists/word";
+        final String OK_URL = BASE_URL + "/checkIfWordExists/word";
+        
         this.mockMvc.perform(MockMvcRequestBuilders.get(OK_URL))
                 .andExpect(status().isOk());
     }

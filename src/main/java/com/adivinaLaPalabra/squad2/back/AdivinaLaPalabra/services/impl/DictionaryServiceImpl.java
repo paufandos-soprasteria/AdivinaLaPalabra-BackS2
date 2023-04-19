@@ -13,11 +13,6 @@ public class DictionaryServiceImpl implements IDictionaryService {
 
     public Boolean checkIfWordExists(String word) {
         Dictionary dictionaryWord = dictionaryRepository.findByWord(word);
-
-        if (dictionaryWord != null) {
-            return true;
-        }
-
-        return false;
+        return dictionaryWord != null;
     }
 }

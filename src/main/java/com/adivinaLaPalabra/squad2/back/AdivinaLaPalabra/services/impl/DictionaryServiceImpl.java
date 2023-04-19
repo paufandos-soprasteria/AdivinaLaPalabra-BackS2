@@ -11,7 +11,7 @@ public class DictionaryServiceImpl implements IDictionaryService {
     @Autowired
     DictionaryRepository dictionaryRepository;
 
-    public Boolean checkIfWordExists(String word) {
+    public Boolean checkIfWordExists(String word) throws RuntimeException {
         Dictionary dictionaryWord = dictionaryRepository.findByWord(word);
         return dictionaryWord != null;
     }

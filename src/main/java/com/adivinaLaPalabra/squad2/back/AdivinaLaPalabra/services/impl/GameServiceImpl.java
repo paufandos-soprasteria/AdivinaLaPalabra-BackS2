@@ -5,6 +5,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.DictionaryRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.Utils;
+import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class GameServiceImpl {
         Dictionary dictionaryWord = getDictionaryColumn(idWord);
         Game newGame = new Game(dictionaryWord.getWord(),datenow);
         saveNewGame(newGame);
-
+        System.out.println("Partida número "+newGame.id);
         return newGame.getId();
     }
     private void saveNewGame(Game newGame) {

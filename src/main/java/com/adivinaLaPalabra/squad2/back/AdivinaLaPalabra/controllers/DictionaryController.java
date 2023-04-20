@@ -4,9 +4,9 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.Dictionar
 
 import java.sql.SQLException;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +20,18 @@ public class DictionaryController {
     public DictionaryServiceImpl dictionaryService;
 
     @ExceptionHandler({ SQLException.class, Exception.class })
-    public ResponseEntity<String> handleDatabaseExceptions(Exception e) {
-        System.out.println("ERROR - " + e.getMessage());
-        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    public JSONObject handleDatabaseExceptions(Exception e) {
+        JSONObject response = new JSONObject();
+        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("message", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return response;
     }
 
-    @GetMapping("/checkIfWordExists/{word}")
-    ResponseEntity<?> checkIfWordExists(@PathVariable("word") String word) {
-        return new ResponseEntity<Boolean>(dictionaryService.checkIfWordExists(word), HttpStatus.OK);
+    @GetMapping(path = "/checkIfWordExists/{word}", produces = "application/json")
+    JSONObject checkIfWordExists(@PathVariable("word") String word) {
+        JSONObject response = new JSONObject();
+        response.put("wordExists", dictionaryService.checkIfWordExists(word));
+        return response;
     }
 }

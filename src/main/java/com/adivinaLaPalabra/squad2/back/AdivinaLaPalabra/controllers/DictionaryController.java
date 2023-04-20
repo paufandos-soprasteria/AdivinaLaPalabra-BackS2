@@ -17,7 +17,7 @@ public class DictionaryController {
     @Autowired
     public DictionaryServiceImpl dictionaryService;
 
-    @GetMapping(path = "/checkIfWordExists/{word}", produces = "application/json")
+    @GetMapping(path = "/checkIfWordExists/{word}")
     JSONObject checkIfWordExists(@PathVariable("word") String word) {
         JSONObject response = new JSONObject();
         response.put("wordExists", dictionaryService.checkIfWordExists(word));

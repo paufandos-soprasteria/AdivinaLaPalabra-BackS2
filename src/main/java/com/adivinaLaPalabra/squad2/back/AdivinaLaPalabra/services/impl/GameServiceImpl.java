@@ -19,10 +19,11 @@ public class GameServiceImpl {
         String datenow = Utils.generateDateNowEspFormat();
         int dictionarySize = getDictionarySize();
         int idWord = Utils.generateRandomNumberInRange(dictionarySize);
+
         Dictionary dictionaryWord = getDictionaryColumn(idWord);
         Game newGame = new Game(dictionaryWord.getWord(), datenow);
         saveNewGame(newGame);
-        System.out.println("Partida número " + newGame.id);
+        
         return newGame.getId();
     }
 

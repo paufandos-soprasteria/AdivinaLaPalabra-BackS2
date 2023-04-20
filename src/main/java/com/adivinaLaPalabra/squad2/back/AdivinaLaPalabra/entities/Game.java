@@ -1,15 +1,15 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
-import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "game")
 public class Game {
     @Id
     @Unsigned
-    @NonNull
+    @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 

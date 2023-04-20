@@ -11,7 +11,7 @@ public class Game {
     @Unsigned
     @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    public Integer id;
 
     @Column(name = "correct_word")
 

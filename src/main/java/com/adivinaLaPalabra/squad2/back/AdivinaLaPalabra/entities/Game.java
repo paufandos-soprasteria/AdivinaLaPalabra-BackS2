@@ -1,5 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
+import java.time.LocalDate;
+
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
@@ -14,16 +16,19 @@ public class Game {
     public Integer id;
 
     @Column(name = "correct_word")
-
     public String correctWord;
 
     @Column(name = "start_date")
-    public String startDate;
+    public LocalDate startDate;
+
+    public Game(Integer id) {
+        this.id = id;
+    }
 
     public Game() {
     }
 
-    public Game(String correctWord, String startDate) {
+    public Game(String correctWord, LocalDate startDate) {
         this.correctWord = correctWord;
         this.startDate = startDate;
     }
@@ -44,11 +49,11 @@ public class Game {
         this.correctWord = correctWord;
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 }

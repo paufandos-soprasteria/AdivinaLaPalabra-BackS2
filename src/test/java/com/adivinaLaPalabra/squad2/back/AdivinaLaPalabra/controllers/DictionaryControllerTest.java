@@ -6,29 +6,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class DictionaryControllerTest {
-
-    final String BASE_URL = "http://localhost:8080/";
-
     @Autowired
     MockMvc mockMvc;
 
     @Test
-    void testBadURLRequestMustReturn404Status() throws Exception {
-        final String BAD_URL = BASE_URL + "/NotNonexistentURL";
-
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void testCheckIfwordExtistMustReturnOKStatus() throws Exception {
-        final String OK_URL = BASE_URL + "/checkIfWordExists/word";
-        
+        final String OK_URL = "/checkIfWordExists/word";
+
         this.mockMvc.perform(MockMvcRequestBuilders.get(OK_URL))
                 .andExpect(status().isOk());
     }

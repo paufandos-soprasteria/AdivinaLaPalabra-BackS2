@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 public class Dictionary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public int id;
+
+    @Column(name = "word")
     public String word;
 
     public Dictionary() {

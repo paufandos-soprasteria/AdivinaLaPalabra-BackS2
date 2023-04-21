@@ -1,4 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services;
 
-public class IGameService {
-}
+public interface IGameService {
+
+    public int newGame();
+
+} 

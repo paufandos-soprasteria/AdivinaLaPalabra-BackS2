@@ -1,5 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Dictionary;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.DictionaryRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -31,7 +32,7 @@ public class GameServiceImplTest {
 
     @Test
     void testNewGameMustReturnAnInt() {
-        final String CORRECT_WORD = "duelo";
+        final Dictionary CORRECT_WORD = new Dictionary(1, "abaca");
         final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
 
         when(gameRepository.save(NEW_GAME)).thenReturn(new Game());

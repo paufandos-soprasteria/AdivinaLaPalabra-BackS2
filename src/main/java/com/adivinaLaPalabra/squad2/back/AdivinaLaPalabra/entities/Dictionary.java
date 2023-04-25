@@ -1,11 +1,13 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dictionary")
 public class Dictionary {
     @Id
+    @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int id;

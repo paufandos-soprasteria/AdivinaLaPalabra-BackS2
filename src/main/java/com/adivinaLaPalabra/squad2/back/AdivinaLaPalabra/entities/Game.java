@@ -1,7 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import java.time.LocalDate;
-
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
@@ -13,23 +12,24 @@ public class Game {
     @Unsigned
     @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    public int id;
 
-    @Column(name = "correct_word")
-    public String correctWord;
+    @ManyToOne
+    @JoinColumn(name="dictionary_id")
+    public Dictionary dictionary;
 
     @Column(name = "start_date")
     public LocalDate startDate;
 
-    public Game(Integer id) {
+    public Game(int id) {
         this.id = id;
     }
 
     public Game() {
     }
 
-    public Game(String correctWord, LocalDate startDate) {
-        this.correctWord = correctWord;
+    public Game(Dictionary dictionary, LocalDate startDate) {
+        this.dictionary = dictionary;
         this.startDate = startDate;
     }
 
@@ -41,12 +41,12 @@ public class Game {
         this.id = id;
     }
 
-    public String getCorrectWord() {
-        return correctWord;
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
-    public void setCorrectWord(String correctWord) {
-        this.correctWord = correctWord;
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
 
     public LocalDate getStartDate() {

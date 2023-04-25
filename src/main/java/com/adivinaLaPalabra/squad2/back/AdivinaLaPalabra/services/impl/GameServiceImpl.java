@@ -27,7 +27,7 @@ public class GameServiceImpl implements IGameService {
         int idWord = NumberUtils.generateRandomNumberInRange(dictionarySize);
 
         Dictionary dictionaryWord = getDictionaryWord(idWord);
-        Game newGame = new Game(dictionaryWord.getWord(), datenow);
+        Game newGame = new Game(dictionaryWord, datenow);
         saveNewGame(newGame);
 
         return newGame.getId();

@@ -1,10 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;

@@ -15,18 +15,18 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordReposi
 public class WordServiceImplTest {
 
     @InjectMocks
-    WordServiceImpl dictionaryServiceImpl;
+    WordServiceImpl wordServiceImpl;
 
     @Mock
-    WordRepository dictionaryRepository;
+    WordRepository wordRepository;
 
     @Test
     void testCheckIfWordExistsMustReturnTrueIfWordExist() {
         final Word EXISTING_WORD_IN_THE_DICTIONARY = new Word(1, "abaca");
-        when(dictionaryRepository.findByValue(EXISTING_WORD_IN_THE_DICTIONARY.getValue()))
+        when(wordRepository.findByValue(EXISTING_WORD_IN_THE_DICTIONARY.getValue()))
                 .thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
 
-        Boolean assertDictionaryWord = dictionaryServiceImpl
+        Boolean assertDictionaryWord = wordServiceImpl
                 .checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
 
         assertTrue(assertDictionaryWord);
@@ -35,15 +35,25 @@ public class WordServiceImplTest {
     @Test
     void testCheckIfWordExistsMustReturnFalseIfWordNotExist() {
         final String NONEXISTENT_WORD_IN_THE_DICTIONARY = "aaaaa";
-        when(dictionaryRepository.findByValue(NONEXISTENT_WORD_IN_THE_DICTIONARY)).thenReturn(null);
+        when(wordRepository.findByValue(NONEXISTENT_WORD_IN_THE_DICTIONARY)).thenReturn(null);
 
-        Boolean assertDictionaryWord = dictionaryServiceImpl.checkIfWordExists(NONEXISTENT_WORD_IN_THE_DICTIONARY);
+        Boolean assertDictionaryWord = wordServiceImpl.checkIfWordExists(NONEXISTENT_WORD_IN_THE_DICTIONARY);
 
         assertFalse(assertDictionaryWord);
     }
 
     @Test
     public void testValidatePositionsMustReturnWordValidated() {
-        // TO DO
+        //TO DO
+    }
+
+    @Test
+    public void testCheckIfIsBadWord() {
+        //TO DO
+    }
+
+    @Test
+    public void testValidatePositions() {
+        //TO DO
     }
 }

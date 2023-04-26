@@ -8,26 +8,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Dictionary;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.DictionaryRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class DictionaryServiceImplTest {
+public class WordServiceImplTest {
 
     @InjectMocks
-    DictionaryServiceImpl dictionaryServiceImpl;
+    WordServiceImpl dictionaryServiceImpl;
 
     @Mock
-    DictionaryRepository dictionaryRepository;
+    WordRepository dictionaryRepository;
 
     @Test
     void testCheckIfWordExistsMustReturnTrueIfWordExist() {
-        final Dictionary EXISTING_WORD_IN_THE_DICTIONARY = new Dictionary(1, "abaca");
-        when(dictionaryRepository.findByWord(EXISTING_WORD_IN_THE_DICTIONARY.getWord()))
+        final Word EXISTING_WORD_IN_THE_DICTIONARY = new Word(1, "abaca");
+        when(dictionaryRepository.findByValue(EXISTING_WORD_IN_THE_DICTIONARY.getValue()))
                 .thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
 
         Boolean assertDictionaryWord = dictionaryServiceImpl
-                .checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getWord());
+                .checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
 
         assertTrue(assertDictionaryWord);
     }
@@ -35,10 +35,15 @@ public class DictionaryServiceImplTest {
     @Test
     void testCheckIfWordExistsMustReturnFalseIfWordNotExist() {
         final String NONEXISTENT_WORD_IN_THE_DICTIONARY = "aaaaa";
-        when(dictionaryRepository.findByWord(NONEXISTENT_WORD_IN_THE_DICTIONARY)).thenReturn(null);
+        when(dictionaryRepository.findByValue(NONEXISTENT_WORD_IN_THE_DICTIONARY)).thenReturn(null);
 
         Boolean assertDictionaryWord = dictionaryServiceImpl.checkIfWordExists(NONEXISTENT_WORD_IN_THE_DICTIONARY);
 
         assertFalse(assertDictionaryWord);
+    }
+
+    @Test
+    public void testValidatePositionsMustReturnWordValidated() {
+        // TO DO
     }
 }

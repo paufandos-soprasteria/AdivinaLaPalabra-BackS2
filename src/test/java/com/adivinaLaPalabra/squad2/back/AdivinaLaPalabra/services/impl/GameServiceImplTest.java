@@ -1,8 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Dictionary;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.DictionaryRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import org.junit.jupiter.api.Test;
@@ -22,23 +22,23 @@ public class GameServiceImplTest {
     GameServiceImpl gameService;
 
     @Mock
-    DictionaryServiceImpl dictionaryService;
+    WordServiceImpl dictionaryService;
 
     @Mock
     GameRepository gameRepository;
 
     @Mock
-    DictionaryRepository dictionaryRepository;
+    WordRepository dictionaryRepository;
 
     @Test
     void testNewGameMustReturnAnInt() {
-        final Dictionary CORRECT_WORD = new Dictionary(1, "abaca");
+        final Word CORRECT_WORD = new Word(1, "abaca");
         final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
 
         when(gameRepository.save(NEW_GAME)).thenReturn(new Game());
         when(dictionaryRepository.count()).thenReturn(1L);
-        int idGame = gameService.newGame();
+        when(gameService.newGame()).thenReturn(NEW_GAME);
 
-        assertInstanceOf(Integer.class, idGame);
+        assertInstanceOf(Game.class, NEW_GAME);
     }
 }

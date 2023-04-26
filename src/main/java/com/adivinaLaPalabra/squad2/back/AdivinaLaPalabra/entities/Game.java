@@ -1,6 +1,10 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
@@ -11,15 +15,18 @@ public class Game {
     @Id
     @Unsigned
     @Nonnull
+    @JsonProperty("game_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="dictionary_id")
-    public Dictionary dictionary;
+    @JoinColumn(name="word_id")
+    public Word correctWord;
 
-    @Column(name = "start_date")
-    public LocalDate startDate;
+    @JsonIgnore
+    @Column(name = "date")
+    public LocalDate date;
 
     public Game(int id) {
         this.id = id;
@@ -28,9 +35,9 @@ public class Game {
     public Game() {
     }
 
-    public Game(Dictionary dictionary, LocalDate startDate) {
-        this.dictionary = dictionary;
-        this.startDate = startDate;
+    public Game(Word word, LocalDate date) {
+        this.correctWord = word;
+        this.date = date;
     }
 
     public int getId() {
@@ -41,19 +48,19 @@ public class Game {
         this.id = id;
     }
 
-    public Dictionary getDictionary() {
-        return dictionary;
+    public Word getCorrectWord() {
+        return correctWord;
     }
 
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    public void setCorrectWord(Word word) {
+        this.correctWord = word;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

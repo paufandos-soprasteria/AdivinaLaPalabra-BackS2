@@ -1,8 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Dictionary;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.DictionaryRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
@@ -18,19 +18,19 @@ public class GameServiceImpl implements IGameService {
     public GameRepository gameRepository;
 
     @Autowired
-    public DictionaryRepository dictionaryRepository;
+    public WordRepository wordRepository;
 
     @Override
-    public int newGame() {
+    public Game newGame() {
         LocalDate datenow = DateUtils.generateLocalDateNow();
         int dictionarySize = getDictionarySize();
-        int idWord = NumberUtils.generateRandomNumberInRange(dictionarySize);
+        int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
 
-        Dictionary dictionaryWord = getDictionaryWord(idWord);
-        Game newGame = new Game(dictionaryWord, datenow);
+        Word word = getWord(wordId);
+        Game newGame = new Game(word, datenow);
         saveNewGame(newGame);
 
-        return newGame.getId();
+        return newGame;
     }
 
     private void saveNewGame(Game newGame) {
@@ -38,10 +38,10 @@ public class GameServiceImpl implements IGameService {
     }
 
     private int getDictionarySize() {
-        return (int) dictionaryRepository.count();
+        return (int) wordRepository.count();
     }
 
-    private Dictionary getDictionaryWord(int idWord) {
-        return dictionaryRepository.getReferenceById(idWord);
+    private Word getWord(int wordId) {
+        return wordRepository.getReferenceById(wordId);
     }
 }

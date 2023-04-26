@@ -2,6 +2,7 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -48,8 +49,7 @@ public class WordServiceImpl implements IWordService {
             String tryWordLetter = String.valueOf(requestWord.charAt(position));
             String correctWordLetter = String.valueOf(correctWord.charAt(position));
 
-            Letter letter = new Letter(tryWordLetter, NOT_MATCHED_LETTER_STATUS, position);
-            ;
+            Letter letter = new Letter(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS.ordinal(), position);
             letter.status = validateLetter(correctWord, tryWordLetter, correctWordLetter);
             letters.add(letter);
         });
@@ -58,8 +58,8 @@ public class WordServiceImpl implements IWordService {
 
     public int validateLetter(String correctWord, String tryWordLetter, String correctWordLetter) {
         if (tryWordLetter.equalsIgnoreCase(correctWordLetter))
-            return MATCHED_LETTER_STATUS;
-        return correctWord.contains(tryWordLetter) ? CONTAINED_LETTER_STATUS : NOT_MATCHED_LETTER_STATUS;
+            return Status.MATCHED_LETTER_STATUS.ordinal();
+        return correctWord.contains(tryWordLetter) ? Status.CONTAINED_LETTER_STATUS.ordinal() : Status.NOT_MATCHED_LETTER_STATUS.ordinal();
     }
 
     public void checkIfIsBadWord(String requestWord) throws BadRequestException {

@@ -2,8 +2,18 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 public class Letter {
 
+    final static int NOT_MATCHED_LETTER_STATUS = 0;
+
+    final static int MATCHED_LETTER_STATUS = 1;
+
+    final static int CONTAINED_LETTER_STATUS = 2;
+
+    public enum Status {NOT_MATCHED_LETTER_STATUS, MATCHED_LETTER_STATUS, CONTAINED_LETTER_STATUS}
+
     public String letter;
+
     public int status;
+
     public int position;
 
     public Letter(String letter, int status, int position) {

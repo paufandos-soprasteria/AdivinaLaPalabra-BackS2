@@ -17,6 +17,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class WordServiceImpl implements IWordService {
 
+    final static int START_WORD_LENGHT = 0;
+
+    final static int MAX_WORD_LENGHT = 5;
+
+    final static int NOT_MATCHED_LETTER_STATUS = 0;
+
+    final static int MATCHED_LETTER_STATUS = 1;
+
+    final static int CONTAINED_LETTER_STATUS = 2;
+
     @Autowired
     WordRepository wordRepository;
 
@@ -30,33 +40,24 @@ public class WordServiceImpl implements IWordService {
 
     @Override
     public List<Letter> validatePositions(String requestWord, Integer gameId) {
-        List<Letter> letters = new ArrayList<Letter>();
+        List<Letter> letters = new ArrayList<>();
 
-        Word word = wordRepository.findByValue(requestWord);
         Game game = gameRepository.getReferenceById(gameId);
-
         String correctWord = game.getCorrectWord().getValue();
-        char[] correctWordSplited = correctWord.toCharArray();
 
-        String tryWord = word.getValue();
-        char[] tryWordSplited = tryWord.toCharArray();
+        IntStream.range(START_WORD_LENGHT, MAX_WORD_LENGHT).forEach(position -> {
+            String tryWordLetter = String.valueOf(requestWord.charAt(position));
+            String correctWordLetter = String.valueOf(correctWord.charAt(position));
 
-        IntStream.range(0, correctWordSplited.length).forEach(i -> {
-            Letter letter = new Letter(tryWordSplited[i], 0, i);
-
-            long charOcurrencesCorrectWord = correctWord.chars().filter(ch -> ch == tryWordSplited[i]).count();
-            String stringCuted = tryWord.substring(0, i+1);
-            long charOcurrencesTryWord = stringCuted.chars().filter(ch -> ch == tryWordSplited[i]).count();
-
-            if (correctWordSplited[i] == tryWordSplited[i]) {
-                letter.status = 1;
-            } else if (correctWord.contains(String.valueOf(tryWordSplited[i])) && charOcurrencesCorrectWord >= charOcurrencesTryWord) {
-                letter.status = 2;
-            }
-
+            Letter letter = new Letter(tryWordLetter, NOT_MATCHED_LETTER_STATUS, position);;
+            letter.status = validateLetter(correctWord,tryWordLetter,correctWordLetter);
             letters.add(letter);
         });
-
         return letters;
+    }
+
+    public int validateLetter(String correctWord, String tryWordLetter, String correctWordLetter){
+        if(tryWordLetter.equalsIgnoreCase(correctWordLetter)) return MATCHED_LETTER_STATUS;
+        return correctWord.contains(tryWordLetter) ? CONTAINED_LETTER_STATUS : NOT_MATCHED_LETTER_STATUS;
     }
 }

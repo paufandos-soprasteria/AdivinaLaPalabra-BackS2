@@ -2,21 +2,21 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 public class Letter {
 
-    public char letter;
+    public String letter;
     public int status;
     public int position;
 
-    public Letter(char letter, int status, int position) {
+    public Letter(String letter, int status, int position) {
         this.letter = letter;
         this.status = status;
         this.position = position;
     }
 
-    public char getLetter() {
+    public String getLetter() {
         return letter;
     }
 
-    public void setLetter(char letter) {
+    public void setLetter(String letter) {
         this.letter = letter;
     }
 

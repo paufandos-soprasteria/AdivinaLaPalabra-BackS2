@@ -16,9 +16,6 @@ public class Word {
     @Column(name = "value")
     private String value;
 
-    public Word() {
-    }
-
     public Word(int id, String word) {
         this.id = id;
         this.value = word;

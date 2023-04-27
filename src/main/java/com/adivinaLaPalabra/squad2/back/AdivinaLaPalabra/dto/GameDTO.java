@@ -1,19 +1,24 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GameDTO {
-    private int game_id;
 
-    public GameDTO(int game_id) {
-        this.game_id = game_id;
+    @JsonProperty("game_id")
+    private int gameId;
+
+
+    public GameDTO(int gameId) {
+        this.gameId = gameId;
     }
 
-    public int getGame_id() {
-        return game_id;
+    public int getGameId() {
+        return gameId;
     }
 
-    public void setGame_id(int game_id) {
-        this.game_id = game_id;
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
     }
 
-    
+
 }

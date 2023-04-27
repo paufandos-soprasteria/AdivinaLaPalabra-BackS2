@@ -26,17 +26,14 @@ public class WordController {
     private WordServiceImpl wordService;
 
     @GetMapping(path = "/checkIfWordExists/{word}")
-    CheckIfWordExistsDTO checkIfWordExists(@PathVariable("word") String word) {
+    private CheckIfWordExistsDTO checkIfWordExists(@PathVariable("word") String word) {
         logger.info("Request to checkIfWordExists - {}", word);
         return new CheckIfWordExistsDTO(wordService.checkIfWordExists(word));
     }
 
     @PostMapping("/validatePositions/{game_id}")
-    public List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") int gameId) throws BadRequestException {
+    private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") int gameId) throws BadRequestException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
-        if (body == null) {
-            throw new BadRequestException();
-        }
         return wordService.validatePositions(body.wordSerialize(), gameId);
     }
 }

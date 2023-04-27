@@ -3,11 +3,11 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 public class LetterDTO {
     public enum Status {NOT_MATCHED, MATCHED, CONTAINED}
 
-    public char letter;
+    private char letter;
 
-    public Status status;
+    private Status status;
 
-    public int position;
+    private int position;
 
     public LetterDTO(char letter, Status status, int position) {
         this.letter = letter;

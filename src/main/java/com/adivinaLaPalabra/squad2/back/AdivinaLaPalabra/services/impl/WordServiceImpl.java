@@ -9,6 +9,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameReposi
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IWordService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class WordServiceImpl implements IWordService {
     }
 
     @Override
-    public List<LetterDTO> validatePositions(String requestWord, int gameId) throws BadRequestException {
+    public List<LetterDTO> validatePositions(String requestWord, UUID gameId) throws BadRequestException {
         List<LetterDTO> letters = new ArrayList<>();
 
         checkIfIsBadWord(requestWord);

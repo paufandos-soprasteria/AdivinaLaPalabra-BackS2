@@ -6,6 +6,8 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestEx
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import java.util.List;
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class WordController {
     }
 
     @PostMapping("/validatePositions/{game_id}")
-    private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") int gameId) throws BadRequestException {
+    private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") UUID gameId) throws BadRequestException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
         return wordService.validatePositions(body.wordSerialize(), gameId);
     }

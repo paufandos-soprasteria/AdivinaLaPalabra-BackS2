@@ -20,6 +20,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordReposi
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +60,7 @@ public class WordServiceImplTest {
 
     @Test
     public void testValidatePositionsMustReturnWordList() throws BadRequestException {
-        final int GAME_ID = 1;
+        final UUID GAME_ID = UUID.randomUUID();
         final String REQUEST = "halla";
         final String CORRECT = "abaca";
         final List<LetterDTO> EXPECTED_LIST = List.of(

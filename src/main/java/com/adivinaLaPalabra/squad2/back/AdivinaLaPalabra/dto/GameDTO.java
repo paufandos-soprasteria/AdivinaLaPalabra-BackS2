@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class GameDTO {
 
     @JsonProperty("game_id")
-    private int gameId;
+    private UUID gameId;
 
-    public GameDTO(int gameId) {
+    public GameDTO(UUID gameId) {
         this.gameId = gameId;
     }
 }

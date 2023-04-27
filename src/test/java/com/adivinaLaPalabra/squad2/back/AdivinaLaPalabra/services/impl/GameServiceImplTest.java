@@ -23,9 +23,6 @@ public class GameServiceImplTest {
     GameServiceImpl gameService;
 
     @Mock
-    WordServiceImpl dictionaryService;
-
-    @Mock
     GameRepository gameRepository;
 
     @Mock

@@ -1,8 +1,13 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,15 +15,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class WordServiceImplTest {
 
     @InjectMocks
     WordServiceImpl wordServiceImpl;
 
+    @InjectMocks
+    GameServiceImpl gameService;
+
     @Mock
     WordRepository wordRepository;
+
+    @Mock
+    GameRepository gameRepository;
 
     @Test
     void testCheckIfWordExistsMustReturnTrueIfWordExist() {
@@ -43,17 +58,51 @@ public class WordServiceImplTest {
     }
 
     @Test
-    public void testValidatePositionsMustReturnWordValidated() {
-        //TO DO
+    public void testValidatePositionsMustReturnWordList() throws BadRequestException {
+        final int GAME_ID = 1;
+        final String REQUEST = "amigo";
+
+        final Word CORRECT_WORD = new Word(1, "abaca");
+        final Word REQUEST_WORD = new Word(2, "amigo");
+        final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
+
+        when(wordRepository.findByValue(REQUEST)).thenReturn(REQUEST_WORD);
+        when(gameRepository.save(NEW_GAME)).thenReturn(NEW_GAME);
+        when(gameRepository.getReferenceById(GAME_ID)).thenReturn(NEW_GAME);
+
+        assertInstanceOf(List.class,wordServiceImpl.validatePositions(REQUEST,GAME_ID));
     }
 
     @Test
     public void testCheckIfIsBadWord() {
-        //TO DO
+        assertThatThrownBy(() -> wordServiceImpl.checkIfIsBadWord(null))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
-    public void testValidatePositions() {
-        //TO DO
+    public void testValidatePositionsNotMatchedLetterStatus() {
+        final String CORRECT_WORD = "perro";
+        final char CORRECT_WORD_LETTER = 'p';
+        final char REQUEST_WORD_LETTER = 'h';
+        final Status NOT_MATCHED_LETTER_STATUS = Status.NOT_MATCHED;
+        assertEquals(NOT_MATCHED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
+    }
+
+    @Test
+    public void testValidatePositionsMatchedLetterStatus() {
+        final String CORRECT_WORD = "perro";
+        final char CORRECT_WORD_LETTER = 'p';
+        final char REQUEST_WORD_LETTER = 'p';
+        final Status MATCHED_LETTER_STATUS = Status.MATCHED;
+        assertEquals(MATCHED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
+    }
+
+    @Test
+    public void testValidatePositionsContainedLetterStatus() {
+        final String CORRECT_WORD = "campo";
+        final char CORRECT_WORD_LETTER = 'c';
+        final char REQUEST_WORD_LETTER = 'p';
+        final Status CONTAINED_LETTER_STATUS = Status.CONTAINED;
+        assertEquals(CONTAINED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
     }
 }

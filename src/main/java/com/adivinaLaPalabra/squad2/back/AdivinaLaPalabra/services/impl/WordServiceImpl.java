@@ -1,8 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -37,8 +37,8 @@ public class WordServiceImpl implements IWordService {
     }
 
     @Override
-    public List<Letter> validatePositions(String requestWord, int gameId) throws BadRequestException {
-        List<Letter> letters = new ArrayList<>();
+    public List<LetterDTO> validatePositions(String requestWord, int gameId) throws BadRequestException {
+        List<LetterDTO> letters = new ArrayList<>();
 
         checkIfIsBadWord(requestWord);
 
@@ -49,7 +49,7 @@ public class WordServiceImpl implements IWordService {
             String tryWordLetter = String.valueOf(requestWord.charAt(position));
             String correctWordLetter = String.valueOf(correctWord.charAt(position));
 
-            Letter letter = new Letter(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS.ordinal(), position);
+            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS.ordinal(), position);
             letter.status = validateLetter(correctWord, tryWordLetter, correctWordLetter);
             letters.add(letter);
         });

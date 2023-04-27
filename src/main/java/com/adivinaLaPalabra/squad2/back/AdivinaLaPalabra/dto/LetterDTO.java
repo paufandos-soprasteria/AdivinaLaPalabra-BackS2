@@ -1,6 +1,6 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
-public class Letter {
+public class LetterDTO {
 
     final static int NOT_MATCHED_LETTER_STATUS = 0;
 
@@ -16,7 +16,7 @@ public class Letter {
 
     public int position;
 
-    public Letter(String letter, int status, int position) {
+    public LetterDTO(String letter, int status, int position) {
         this.letter = letter;
         this.status = status;
         this.position = position;

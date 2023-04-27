@@ -1,10 +1,10 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.responses;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
-public class CheckIfWordExistsResponse {
+public class CheckIfWordExistsDTO {
 
     private Boolean wordExists;
 
-    public CheckIfWordExistsResponse(Boolean wordExists) {
+    public CheckIfWordExistsDTO(Boolean wordExists) {
         this.wordExists = wordExists;
     }
 

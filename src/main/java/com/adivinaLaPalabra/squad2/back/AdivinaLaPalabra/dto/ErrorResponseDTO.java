@@ -1,12 +1,12 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.responses;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
-public class ErrorResponse {
+public class ErrorResponseDTO {
 
     private int status;
 
     private String message;
 
-    public ErrorResponse(int status, String message) {
+    public ErrorResponseDTO(int status, String message) {
         this.status = status;
         this.message = message;
     }

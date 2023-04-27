@@ -39,9 +39,10 @@ public class WordControllerTest {
     public void testEndPointValidatePositionsReturnOkStatus() throws Exception {
         final int GAME_ID = 1;
         final String VALIDATE_POSITIONS_URL = "/validatePositions/{game_id}";
-        ValidatePositionsRequest requestBody = new ValidatePositionsRequest("a", "b", "a", "c", "a");
+        ValidatePositionsRequest requestBody = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
 
-        when(gameRepository.save(new Game())).thenReturn(new Game());
+        Game game = new Game();
+        when(gameRepository.save(game)).thenReturn(game);
         
         this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))

@@ -3,6 +3,8 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
@@ -18,6 +20,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordReposi
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -25,9 +28,6 @@ public class WordServiceImplTest {
 
     @InjectMocks
     WordServiceImpl wordServiceImpl;
-
-    @InjectMocks
-    GameServiceImpl gameService;
 
     @Mock
     WordRepository wordRepository;
@@ -60,17 +60,35 @@ public class WordServiceImplTest {
     @Test
     public void testValidatePositionsMustReturnWordList() throws BadRequestException {
         final int GAME_ID = 1;
-        final String REQUEST = "amigo";
+        final String REQUEST = "halla";
+        final String CORRECT = "abaca";
+        final List<LetterDTO> EXPECTED_LIST = List.of(
+                new LetterDTO('h',Status.NOT_MATCHED,0),
+                new LetterDTO('a',Status.CONTAINED,1),
+                new LetterDTO('l',Status.NOT_MATCHED,2),
+                new LetterDTO('l',Status.NOT_MATCHED,3),
+                new LetterDTO('a',Status.MATCHED,4)
+        );
 
-        final Word CORRECT_WORD = new Word(1, "abaca");
-        final Word REQUEST_WORD = new Word(2, "amigo");
+        final Word CORRECT_WORD = new Word(1, CORRECT);
+        final Word REQUEST_WORD = new Word(2, REQUEST);
         final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
 
         when(wordRepository.findByValue(REQUEST)).thenReturn(REQUEST_WORD);
         when(gameRepository.save(NEW_GAME)).thenReturn(NEW_GAME);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(NEW_GAME);
 
-        assertInstanceOf(List.class,wordServiceImpl.validatePositions(REQUEST,GAME_ID));
+        assertLettersAreExpected(EXPECTED_LIST,wordServiceImpl.validatePositions(REQUEST,GAME_ID));
+    }
+
+    void assertLettersAreExpected(List<LetterDTO> expectedLetters, List<LetterDTO> requestLetters) {
+        IntStream.range(0, 5).forEach(position -> {
+            LetterDTO expectedLetter = expectedLetters.get(position);
+            LetterDTO requestLetter = requestLetters.get(position);
+            assertEquals(expectedLetter.getLetter(),requestLetter.getLetter());
+            assertEquals(expectedLetter.getStatus(),requestLetter.getStatus());
+            assertEquals(expectedLetter.getPosition(),requestLetter.getPosition());
+        });
     }
 
     @Test

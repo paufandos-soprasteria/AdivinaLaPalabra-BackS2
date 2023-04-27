@@ -1,5 +1,10 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CheckIfWordExistsDTO {
 
     private Boolean wordExists;
@@ -8,13 +13,4 @@ public class CheckIfWordExistsDTO {
         this.wordExists = wordExists;
     }
 
-    public Boolean getWordExists() {
-        return wordExists;
-    }
-
-    public void setWordExists(Boolean wordExists) {
-        this.wordExists = wordExists;
-    }
-    
-    
 }

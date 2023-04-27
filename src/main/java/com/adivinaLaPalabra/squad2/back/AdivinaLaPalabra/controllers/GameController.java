@@ -27,7 +27,7 @@ public class GameController {
 
     @GetMapping("/newGame")
     public GameDTO newGame() {
-        logger.info("Request to newGame - id: {}", gameService.newGame().getGame_id());
+        logger.info("Request to newGame");
         return gameService.newGame();
     }
 }

@@ -15,19 +15,19 @@ public class GameController {
     
     private static final Logger logger = LogManager.getLogger(WordController.class);
 
+    @Autowired
+    private GameServiceImpl gameService;
+
     @ExceptionHandler({ Exception.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponseDTO handleDatabaseExceptions(Exception e) {
+    private ErrorResponseDTO handleDatabaseExceptions(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ha habido un fallo al generar la partida, ya se ve lo loser que eres. Recarga anda.");
     }
 
-    @Autowired
-    public GameServiceImpl gameService;
-
     @GetMapping("/newGame")
-    public GameDTO newGame() {
+    private GameDTO newGame() {
         logger.info("Request to newGame");
-        return gameService.newGame();
+        return new GameDTO(gameService.newGame().getId());
     }
 }

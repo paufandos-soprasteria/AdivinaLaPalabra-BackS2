@@ -20,22 +20,21 @@ public class UtilsTest {
     @Test
     void generateRandomNumberMustReturnNumberInRangeTenTest() {
         final int RANGE_10 = 10;
-        final int NUMBER_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        final double NUMBER_EXPECTED = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        assertTrue(validateNumber(NUMBER_EXPECTED,NUMBER_IN_RANGE_10));
+        final double NUMBER_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
+        assertTrue(validateNumber(RANGE_10,NUMBER_IN_RANGE_10));
 
     }
 
     @Test
     void generateRandomNumberMustReturnNumberNotInRangeTenTest() {
         final int RANGE_10 = 10;
-        final int NUMBER_NOT_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
+        final double NUMBER_NOT_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
         final double NUMBER_EXPECTED = Math.random();
         assertFalse(validateNumber(NUMBER_EXPECTED,NUMBER_NOT_IN_RANGE_10));
 
     }
 
-    boolean validateNumber(double numberExpected,int numberNotInRange){
-        return numberNotInRange <= numberExpected;
+    boolean validateNumber(double maxNumber,double number){
+        return number <= maxNumber;
     }
 }

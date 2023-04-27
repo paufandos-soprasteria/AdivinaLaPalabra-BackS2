@@ -1,7 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -22,22 +21,17 @@ public class GameServiceImpl implements IGameService {
     private WordRepository wordRepository;
 
     @Override
-    public GameDTO newGame() {
+    public Game newGame() {
         LocalDate datenow = DateUtils.generateLocalDateNow();
         int dictionarySize = getDictionarySize();
         int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
-
         Word word = getWord(wordId);
-        Game newGame = new Game(word, datenow);
-        saveNewGame(newGame);
-
-        GameDTO game = new GameDTO(newGame.getId());
-
-        return game;
+        
+        return saveNewGame(new Game(word, datenow));
     }
 
-    private void saveNewGame(Game newGame) {
-        gameRepository.save(newGame);
+    private Game saveNewGame(Game newGame) {
+        return gameRepository.save(newGame);
     }
 
     private int getDictionarySize() {

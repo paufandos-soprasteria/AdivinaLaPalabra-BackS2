@@ -1,7 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions;
 
 public class BadRequestException extends Exception{
-    static final String DESCRIPTION = "Bad Request";
+    private static final String DESCRIPTION = "Bad Request";
 
     public BadRequestException(){
         super(DESCRIPTION);

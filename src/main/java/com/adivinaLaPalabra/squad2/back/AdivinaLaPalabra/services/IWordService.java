@@ -7,8 +7,8 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestEx
 
 public interface IWordService {
 
-    Boolean checkIfWordExists(String word);
+    public Boolean checkIfWordExists(String word);
 
-    List<LetterDTO> validatePositions(String requestWord, int gameId) throws BadRequestException;
+    public List<LetterDTO> validatePositions(String requestWord, int gameId) throws BadRequestException;
 
 }

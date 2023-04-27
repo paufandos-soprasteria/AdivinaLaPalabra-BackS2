@@ -2,9 +2,15 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "word")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Word {
 
     @Id
@@ -16,27 +22,8 @@ public class Word {
     @Column(name = "value")
     private String value;
 
-    public Word() {
-    }
-
     public Word(int id, String word) {
         this.id = id;
-        this.value = word;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String word) {
         this.value = word;
     }
 }

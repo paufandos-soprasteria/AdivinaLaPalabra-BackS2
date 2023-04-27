@@ -1,8 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
@@ -50,7 +50,7 @@ public class GameServiceImplTest {
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
 
-        GameDTO gameDTO = gameService.newGame();
+        Game game = gameService.newGame();
         Game saveGame = captor.getValue();
         assertEquals(CORRECT_WORD,saveGame.getCorrectWord());
     }

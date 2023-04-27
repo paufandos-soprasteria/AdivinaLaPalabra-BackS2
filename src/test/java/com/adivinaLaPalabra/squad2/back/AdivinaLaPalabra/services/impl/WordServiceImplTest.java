@@ -86,8 +86,8 @@ public class WordServiceImplTest {
             LetterDTO expectedLetter = expectedLetters.get(position);
             LetterDTO requestLetter = requestLetters.get(position);
             assertEquals(expectedLetter.getLetter(),requestLetter.getLetter());
-            assertEquals(expectedLetter.status,requestLetter.status);
-            assertEquals(expectedLetter.position,requestLetter.getPosition());
+            assertEquals(expectedLetter.getStatus(),requestLetter.getStatus());
+            assertEquals(expectedLetter.getPosition(),requestLetter.getPosition());
         });
     }
 

@@ -11,10 +11,10 @@ public class Word {
     @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int id;
+    private int id;
 
     @Column(name = "value")
-    public String value;
+    private String value;
 
     public Word() {
     }

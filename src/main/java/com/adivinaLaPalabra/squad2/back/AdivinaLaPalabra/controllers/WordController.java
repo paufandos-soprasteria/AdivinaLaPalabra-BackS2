@@ -23,7 +23,7 @@ public class WordController {
     private static final Logger logger = LogManager.getLogger(WordController.class);
 
     @Autowired
-    public WordServiceImpl wordService;
+    private WordServiceImpl wordService;
 
     @GetMapping(path = "/checkIfWordExists/{word}")
     CheckIfWordExistsDTO checkIfWordExists(@PathVariable("word") String word) {

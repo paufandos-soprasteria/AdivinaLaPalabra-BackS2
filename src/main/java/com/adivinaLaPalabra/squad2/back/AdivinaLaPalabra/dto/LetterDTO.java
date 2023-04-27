@@ -10,23 +10,23 @@ public class LetterDTO {
 
     public enum Status {NOT_MATCHED_LETTER_STATUS, MATCHED_LETTER_STATUS, CONTAINED_LETTER_STATUS}
 
-    public String letter;
+    public char letter;
 
     public int status;
 
     public int position;
 
-    public LetterDTO(String letter, int status, int position) {
+    public LetterDTO(char letter, Status status, int position) {
         this.letter = letter;
-        this.status = status;
+        this.status = status.ordinal();
         this.position = position;
     }
 
-    public String getLetter() {
+    public char getLetter() {
         return letter;
     }
 
-    public void setLetter(String letter) {
+    public void setLetter(char letter) {
         this.letter = letter;
     }
 
@@ -34,8 +34,8 @@ public class LetterDTO {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setStatus(Status status) {
+        this.status = status.ordinal();
     }
 
     public int getPosition() {

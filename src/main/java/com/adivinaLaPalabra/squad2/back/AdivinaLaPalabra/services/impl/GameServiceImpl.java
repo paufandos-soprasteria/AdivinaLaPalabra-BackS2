@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 public class GameServiceImpl implements IGameService {
 
     @Autowired
-    public GameRepository gameRepository;
+    private GameRepository gameRepository;
 
     @Autowired
-    public WordRepository wordRepository;
+    private WordRepository wordRepository;
 
     @Override
     public GameDTO newGame() {

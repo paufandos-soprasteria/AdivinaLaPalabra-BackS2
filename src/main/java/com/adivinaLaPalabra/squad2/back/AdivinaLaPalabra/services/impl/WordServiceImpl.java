@@ -27,10 +27,10 @@ public class WordServiceImpl implements IWordService {
     final static int CONTAINED_LETTER_STATUS = 2;
 
     @Autowired
-    WordRepository wordRepository;
+    private WordRepository wordRepository;
 
     @Autowired
-    GameRepository gameRepository;
+    private GameRepository gameRepository;
 
     public Boolean checkIfWordExists(String requestWord) throws RuntimeException {
         return wordRepository.findByValue(requestWord) != null;
@@ -46,24 +46,25 @@ public class WordServiceImpl implements IWordService {
         String correctWord = game.getCorrectWord().getValue();
 
         IntStream.range(START_WORD_LENGHT, MAX_WORD_LENGHT).forEach(position -> {
-            String tryWordLetter = String.valueOf(requestWord.charAt(position));
-            String correctWordLetter = String.valueOf(correctWord.charAt(position));
+            char tryWordLetter = requestWord.charAt(position);
+            char correctWordLetter = correctWord.charAt(position);
 
-            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS.ordinal(), position);
-            letter.status = validateLetter(correctWord, tryWordLetter, correctWordLetter);
+            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS, position);
+            letter.setStatus(validateLetter(correctWord, tryWordLetter, correctWordLetter));
             letters.add(letter);
         });
         return letters;
     }
 
-    public int validateLetter(String correctWord, String tryWordLetter, String correctWordLetter) {
-        if (tryWordLetter.equalsIgnoreCase(correctWordLetter))
-            return Status.MATCHED_LETTER_STATUS.ordinal();
-        return correctWord.contains(tryWordLetter) ? Status.CONTAINED_LETTER_STATUS.ordinal() : Status.NOT_MATCHED_LETTER_STATUS.ordinal();
+    public Status validateLetter(String correctWord, char tryWordLetter, char correctWordLetter) {
+        if (tryWordLetter == correctWordLetter)
+            return Status.MATCHED_LETTER_STATUS;
+        return correctWord.indexOf(tryWordLetter) >= START_WORD_LENGHT ? Status.CONTAINED_LETTER_STATUS
+                : Status.NOT_MATCHED_LETTER_STATUS;
     }
 
     public void checkIfIsBadWord(String requestWord) throws BadRequestException {
-        if (wordRepository.findByValue(requestWord) == null) {
+        if (!checkIfWordExists(requestWord)) {
             throw new BadRequestException(requestWord + " no existe.");
         }
     }

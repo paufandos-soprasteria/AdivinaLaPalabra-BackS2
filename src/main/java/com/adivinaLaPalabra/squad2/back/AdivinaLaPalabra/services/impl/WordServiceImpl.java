@@ -20,11 +20,11 @@ public class WordServiceImpl implements IWordService {
 
     final static int MAX_WORD_LENGHT = 5;
 
-    final static int NOT_MATCHED_LETTER_STATUS = 0;
+    final static int NOT_MATCHED_STATUS = 0;
 
-    final static int MATCHED_LETTER_STATUS = 1;
+    final static int MATCHED_STATUS = 1;
 
-    final static int CONTAINED_LETTER_STATUS = 2;
+    final static int CONTAINED_STATUS = 2;
 
     @Autowired
     private WordRepository wordRepository;
@@ -49,7 +49,7 @@ public class WordServiceImpl implements IWordService {
             char tryWordLetter = requestWord.charAt(position);
             char correctWordLetter = correctWord.charAt(position);
 
-            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS, position);
+            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED, position);
             letter.setStatus(validateLetter(correctWord, tryWordLetter, correctWordLetter));
             letters.add(letter);
         });
@@ -58,9 +58,9 @@ public class WordServiceImpl implements IWordService {
 
     public Status validateLetter(String correctWord, char tryWordLetter, char correctWordLetter) {
         if (tryWordLetter == correctWordLetter)
-            return Status.MATCHED_LETTER_STATUS;
-        return correctWord.indexOf(tryWordLetter) >= START_WORD_LENGHT ? Status.CONTAINED_LETTER_STATUS
-                : Status.NOT_MATCHED_LETTER_STATUS;
+            return Status.MATCHED;
+        return correctWord.indexOf(tryWordLetter) >= START_WORD_LENGHT ? Status.CONTAINED
+                : Status.NOT_MATCHED;
     }
 
     public void checkIfIsBadWord(String requestWord) throws BadRequestException {

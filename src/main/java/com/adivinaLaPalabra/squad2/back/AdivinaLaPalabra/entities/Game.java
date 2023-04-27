@@ -1,7 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
@@ -9,28 +9,32 @@ import jdk.jfr.Unsigned;
 @Entity
 @Table(name = "game")
 public class Game {
+
     @Id
     @Unsigned
     @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    private int id;
 
-    @Column(name = "correct_word")
-    public String correctWord;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "word_id")
+    private Word correctWord;
 
-    @Column(name = "start_date")
-    public LocalDate startDate;
-
-    public Game(Integer id) {
-        this.id = id;
-    }
+    @JsonIgnore
+    @Column(name = "date")
+    private LocalDate date;
 
     public Game() {
     }
 
-    public Game(String correctWord, LocalDate startDate) {
-        this.correctWord = correctWord;
-        this.startDate = startDate;
+    public Game(int id) {
+        this.id = id;
+    }
+
+    public Game(Word word, LocalDate date) {
+        this.correctWord = word;
+        this.date = date;
     }
 
     public int getId() {
@@ -41,19 +45,19 @@ public class Game {
         this.id = id;
     }
 
-    public String getCorrectWord() {
+    public Word getCorrectWord() {
         return correctWord;
     }
 
-    public void setCorrectWord(String correctWord) {
-        this.correctWord = correctWord;
+    public void setCorrectWord(Word word) {
+        this.correctWord = word;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

@@ -1,10 +1,9 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.responses;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
-public class NewGameResponse {
-
+public class GameDTO {
     private int game_id;
 
-    public NewGameResponse(int game_id) {
+    public GameDTO(int game_id) {
         this.game_id = game_id;
     }
 
@@ -15,4 +14,6 @@ public class NewGameResponse {
     public void setGame_id(int game_id) {
         this.game_id = game_id;
     }
+
+    
 }

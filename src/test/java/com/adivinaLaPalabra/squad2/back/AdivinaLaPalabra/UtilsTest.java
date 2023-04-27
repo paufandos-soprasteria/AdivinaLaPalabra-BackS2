@@ -5,7 +5,8 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UtilsTest {
@@ -17,9 +18,24 @@ public class UtilsTest {
     }
 
     @Test
-    void generateRandomNumberTest() {
-        final int NUMBER_IN_RANGE_1 = 1;
-        final int NUMBER_EXPECTED = 1;
-        assertEquals(NUMBER_EXPECTED, NumberUtils.generateRandomNumberInRange(NUMBER_IN_RANGE_1));
+    void generateRandomNumberMustReturnNumberInRangeTenTest() {
+        final int RANGE_10 = 10;
+        final int NUMBER_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
+        final double NUMBER_EXPECTED = NumberUtils.generateRandomNumberInRange(RANGE_10);
+        assertTrue(validateNumber(NUMBER_EXPECTED,NUMBER_IN_RANGE_10));
+
+    }
+
+    @Test
+    void generateRandomNumberMustReturnNumberNotInRangeTenTest() {
+        final int RANGE_10 = 10;
+        final int NUMBER_NOT_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
+        final double NUMBER_EXPECTED = Math.random();
+        assertFalse(validateNumber(NUMBER_EXPECTED,NUMBER_NOT_IN_RANGE_10));
+
+    }
+
+    boolean validateNumber(double numberExpected,int numberNotInRange){
+        return numberNotInRange <= numberExpected;
     }
 }

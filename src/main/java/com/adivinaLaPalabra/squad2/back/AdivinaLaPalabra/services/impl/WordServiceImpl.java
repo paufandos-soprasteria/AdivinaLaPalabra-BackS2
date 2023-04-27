@@ -1,8 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -20,25 +20,25 @@ public class WordServiceImpl implements IWordService {
 
     final static int MAX_WORD_LENGHT = 5;
 
-    final static int NOT_MATCHED_LETTER_STATUS = 0;
+    final static int NOT_MATCHED_STATUS = 0;
 
-    final static int MATCHED_LETTER_STATUS = 1;
+    final static int MATCHED_STATUS = 1;
 
-    final static int CONTAINED_LETTER_STATUS = 2;
-
-    @Autowired
-    WordRepository wordRepository;
+    final static int CONTAINED_STATUS = 2;
 
     @Autowired
-    GameRepository gameRepository;
+    private WordRepository wordRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     public Boolean checkIfWordExists(String requestWord) throws RuntimeException {
         return wordRepository.findByValue(requestWord) != null;
     }
 
     @Override
-    public List<Letter> validatePositions(String requestWord, int gameId) throws BadRequestException {
-        List<Letter> letters = new ArrayList<>();
+    public List<LetterDTO> validatePositions(String requestWord, int gameId) throws BadRequestException {
+        List<LetterDTO> letters = new ArrayList<>();
 
         checkIfIsBadWord(requestWord);
 
@@ -46,24 +46,25 @@ public class WordServiceImpl implements IWordService {
         String correctWord = game.getCorrectWord().getValue();
 
         IntStream.range(START_WORD_LENGHT, MAX_WORD_LENGHT).forEach(position -> {
-            String tryWordLetter = String.valueOf(requestWord.charAt(position));
-            String correctWordLetter = String.valueOf(correctWord.charAt(position));
+            char tryWordLetter = requestWord.charAt(position);
+            char correctWordLetter = correctWord.charAt(position);
 
-            Letter letter = new Letter(tryWordLetter, Status.NOT_MATCHED_LETTER_STATUS.ordinal(), position);
-            letter.status = validateLetter(correctWord, tryWordLetter, correctWordLetter);
+            LetterDTO letter = new LetterDTO(tryWordLetter, Status.NOT_MATCHED, position);
+            letter.setStatus(validateLetter(correctWord, tryWordLetter, correctWordLetter));
             letters.add(letter);
         });
         return letters;
     }
 
-    public int validateLetter(String correctWord, String tryWordLetter, String correctWordLetter) {
-        if (tryWordLetter.equalsIgnoreCase(correctWordLetter))
-            return Status.MATCHED_LETTER_STATUS.ordinal();
-        return correctWord.contains(tryWordLetter) ? Status.CONTAINED_LETTER_STATUS.ordinal() : Status.NOT_MATCHED_LETTER_STATUS.ordinal();
+    public Status validateLetter(String correctWord, char tryWordLetter, char correctWordLetter) {
+        if (tryWordLetter == correctWordLetter)
+            return Status.MATCHED;
+        return correctWord.indexOf(tryWordLetter) >= START_WORD_LENGHT ? Status.CONTAINED
+                : Status.NOT_MATCHED;
     }
 
     public void checkIfIsBadWord(String requestWord) throws BadRequestException {
-        if (wordRepository.findByValue(requestWord) == null) {
+        if (!checkIfWordExists(requestWord)) {
             throw new BadRequestException(requestWord + " no existe.");
         }
     }

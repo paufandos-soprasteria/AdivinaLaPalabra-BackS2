@@ -1,9 +1,9 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Letter;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckIfWordExistsDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.responses.CheckIfWordExistsResponse;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -23,16 +23,16 @@ public class WordController {
     private static final Logger logger = LogManager.getLogger(WordController.class);
 
     @Autowired
-    public WordServiceImpl wordService;
+    private WordServiceImpl wordService;
 
     @GetMapping(path = "/checkIfWordExists/{word}")
-    CheckIfWordExistsResponse checkIfWordExists(@PathVariable("word") String word) {
+    CheckIfWordExistsDTO checkIfWordExists(@PathVariable("word") String word) {
         logger.info("Request to checkIfWordExists - {}", word);
-        return new CheckIfWordExistsResponse(wordService.checkIfWordExists(word));
+        return new CheckIfWordExistsDTO(wordService.checkIfWordExists(word));
     }
 
     @PostMapping("/validatePositions/{game_id}")
-    public List<Letter> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") int gameId) throws BadRequestException {
+    public List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") int gameId) throws BadRequestException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
         if (body == null) {
             throw new BadRequestException();

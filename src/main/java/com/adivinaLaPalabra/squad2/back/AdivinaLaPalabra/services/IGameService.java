@@ -1,9 +1,9 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
 
 public interface IGameService {
 
-    public Game newGame();
+    GameDTO newGame();
 
 } 

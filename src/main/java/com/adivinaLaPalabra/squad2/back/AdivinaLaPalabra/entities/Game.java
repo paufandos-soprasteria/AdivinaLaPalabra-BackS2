@@ -2,7 +2,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
@@ -10,27 +9,27 @@ import jdk.jfr.Unsigned;
 @Entity
 @Table(name = "game")
 public class Game {
+
     @Id
     @Unsigned
     @Nonnull
-    @JsonProperty("game_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private int id;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="word_id")
-    public Word correctWord;
+    @JoinColumn(name = "word_id")
+    private Word correctWord;
 
     @JsonIgnore
     @Column(name = "date")
-    public LocalDate date;
+    private LocalDate date;
+
+    public Game() {
+    }
 
     public Game(int id) {
         this.id = id;
-    }
-
-    public Game() {
     }
 
     public Game(Word word, LocalDate date) {

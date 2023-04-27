@@ -18,7 +18,6 @@ public class ErrorHandlerTest {
         @Test
         void testBadURLRequestMustReturn404Status() throws Exception {
             final String BAD_URL = "/NotNonexistentURL";
-    
             this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
                     .andExpect(status().isNotFound());
         }

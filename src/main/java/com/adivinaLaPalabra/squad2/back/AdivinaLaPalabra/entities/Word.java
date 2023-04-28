@@ -1,20 +1,17 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Objects;
 
 @Entity
 @Table(name = "word")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Word {
 
     @Id
-    @Nonnull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
@@ -22,8 +19,8 @@ public class Word {
     @Column(name = "value")
     private String value;
 
-    public Word(int id, String word) {
+    public Word(int id, String value) {
         this.id = id;
-        this.value = word;
+        this.value = Objects.requireNonNull(value);
     }
 }

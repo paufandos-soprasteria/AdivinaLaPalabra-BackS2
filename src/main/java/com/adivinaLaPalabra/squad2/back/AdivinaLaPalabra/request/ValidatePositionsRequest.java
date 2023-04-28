@@ -1,13 +1,11 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class ValidatePositionsRequest {
 
-    private char pos0, pos1, pos2, pos3, pos4;
+    private final char pos0, pos1, pos2, pos3, pos4;
 
     public ValidatePositionsRequest(char pos0, char pos1, char pos2, char pos3, char pos4) {
         this.pos0 = pos0;

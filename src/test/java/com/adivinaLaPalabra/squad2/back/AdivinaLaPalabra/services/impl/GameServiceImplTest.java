@@ -4,7 +4,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -41,8 +38,8 @@ public class GameServiceImplTest {
     void testNewGameMustReturnAnInt() {
         final UUID GAME_ID = UUID.randomUUID();
         final Word CORRECT_WORD = new Word(1, "abaca");
-        final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
-        final Game SAVE_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
+        final Game NEW_GAME = new Game(CORRECT_WORD);
+        final Game SAVE_GAME = new Game(CORRECT_WORD);
         SAVE_GAME.setId(GAME_ID);
         NEW_GAME.setId(GAME_ID);
 
@@ -50,7 +47,7 @@ public class GameServiceImplTest {
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
 
-        Game game = gameService.newGame();
+        gameService.newGame();
         Game saveGame = captor.getValue();
         assertEquals(CORRECT_WORD,saveGame.getCorrectWord());
     }

@@ -1,18 +1,16 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class LetterDTO {
     public enum Status {NOT_MATCHED, MATCHED, CONTAINED}
 
-    private char letter;
+    private final char letter;
 
-    private Status status;
+    private final Status status;
 
-    private int position;
+    private final int position;
 
     public LetterDTO(char letter, Status status, int position) {
         this.letter = letter;

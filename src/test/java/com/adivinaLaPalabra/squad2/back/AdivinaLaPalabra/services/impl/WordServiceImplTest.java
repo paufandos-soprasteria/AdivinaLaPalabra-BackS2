@@ -9,7 +9,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -73,7 +72,7 @@ public class WordServiceImplTest {
 
         final Word CORRECT_WORD = new Word(1, CORRECT);
         final Word REQUEST_WORD = new Word(2, REQUEST);
-        final Game NEW_GAME = new Game(CORRECT_WORD, DateUtils.generateLocalDateNow());
+        final Game NEW_GAME = new Game(CORRECT_WORD);
 
         when(wordRepository.findByValue(REQUEST)).thenReturn(REQUEST_WORD);
         when(gameRepository.save(NEW_GAME)).thenReturn(NEW_GAME);

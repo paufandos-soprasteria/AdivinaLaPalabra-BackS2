@@ -7,7 +7,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositio
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import java.util.List;
 import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

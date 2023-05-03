@@ -1,5 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
@@ -8,6 +9,8 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class GameServiceImpl implements IGameService {
@@ -25,6 +28,11 @@ public class GameServiceImpl implements IGameService {
         Word word = getWord(wordId);
         
         return saveNewGame(new Game(word));
+    }
+
+    @Override
+    public CorrectWordDTO getCorrectWord(UUID gameId) {
+        return new CorrectWordDTO(gameRepository.getReferenceById(gameId).getCorrectWord().getValue());
     }
 
     private Game saveNewGame(Game newGame) {

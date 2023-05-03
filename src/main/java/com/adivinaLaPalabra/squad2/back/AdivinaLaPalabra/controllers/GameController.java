@@ -40,9 +40,9 @@ public class GameController {
         return gameService.getCorrectWord(gameId);
     }
 
-    @GetMapping("/checkFiveAttempts/{game_id}")
-    private CheckAttemptsInRangeDTO checkFiveAttempts(@PathVariable("game_id") UUID gameId) {
-        logger.info("Request to checkFiveAttempts GameId : "+ gameId);
+    @GetMapping("/checkAttemptsInRange/{game_id}")
+    private CheckAttemptsInRangeDTO checkAttemptsInRange(@PathVariable("game_id") UUID gameId) {
+        logger.info("Request to checkAttemptsInRange GameId : "+ gameId);
         return gameService.checkFiveAttempts(gameId);
     }
 }

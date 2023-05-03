@@ -1,11 +1,12 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,20 +19,14 @@ public class UtilsTest {
     }
 
     @Test
-    void generateRandomNumberMustReturnNumberInRangeTenTest() {
-        final int RANGE_10 = 10;
-        final double NUMBER_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        assertTrue(validateNumber(RANGE_10,NUMBER_IN_RANGE_10));
-
+    void generateLocalDateTimeNowTest() {
+        assertInstanceOf(LocalDateTime.class, DateUtils.generateLocalDateTimeNow());
     }
 
-    @Test
-    void generateRandomNumberMustReturnNumberNotInRangeTenTest() {
-        final int RANGE_10 = 10;
-        final double NUMBER_NOT_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        final double NUMBER_EXPECTED = Math.random();
-        assertFalse(validateNumber(NUMBER_EXPECTED,NUMBER_NOT_IN_RANGE_10));
-
+    @ParameterizedTest
+    @CsvSource({"1,10,true","9,10,true","10,10,true","6,5,false"})
+    void generateRandomNumberMTest(int number, int range, Boolean valid) {
+        assertEquals(valid,validateNumber(range,number));
     }
 
     boolean validateNumber(double maxNumber,double number){

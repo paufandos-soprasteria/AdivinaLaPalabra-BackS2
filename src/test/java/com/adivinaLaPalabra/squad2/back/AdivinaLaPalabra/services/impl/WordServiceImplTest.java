@@ -3,7 +3,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
@@ -11,6 +10,8 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestEx
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -97,30 +98,9 @@ public class WordServiceImplTest {
                 .isInstanceOf(BadRequestException.class);
     }
 
-    @Test
-    public void testValidatePositionsNotMatchedLetterStatus() {
-        final String CORRECT_WORD = "perro";
-        final char CORRECT_WORD_LETTER = 'p';
-        final char REQUEST_WORD_LETTER = 'h';
-        final Status NOT_MATCHED_LETTER_STATUS = Status.NOT_MATCHED;
-        assertEquals(NOT_MATCHED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
-    }
-
-    @Test
-    public void testValidatePositionsMatchedLetterStatus() {
-        final String CORRECT_WORD = "perro";
-        final char CORRECT_WORD_LETTER = 'p';
-        final char REQUEST_WORD_LETTER = 'p';
-        final Status MATCHED_LETTER_STATUS = Status.MATCHED;
-        assertEquals(MATCHED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
-    }
-
-    @Test
-    public void testValidatePositionsContainedLetterStatus() {
-        final String CORRECT_WORD = "campo";
-        final char CORRECT_WORD_LETTER = 'c';
-        final char REQUEST_WORD_LETTER = 'p';
-        final Status CONTAINED_LETTER_STATUS = Status.CONTAINED;
-        assertEquals(CONTAINED_LETTER_STATUS,wordServiceImpl.validateLetter(CORRECT_WORD,REQUEST_WORD_LETTER,CORRECT_WORD_LETTER));
+    @ParameterizedTest
+    @CsvSource({"perro,p,h,NOT_MATCHED","perro,p,p,MATCHED","campo,c,p,CONTAINED"})
+    public void testValidatePositionsLetterStatus(String correctWord, char correctWordLetter,char requestWordLetter,Status status) {
+        assertEquals(status,wordServiceImpl.validateLetter(correctWord,requestWordLetter,correctWordLetter));
     }
 }

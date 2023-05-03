@@ -4,7 +4,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckIfWordExistsDT
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.AttemptServiceImpl;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import java.util.List;
 import java.util.UUID;
@@ -27,9 +26,6 @@ public class WordController {
     @Autowired
     private WordServiceImpl wordService;
 
-    @Autowired
-    private AttemptServiceImpl attemptService;
-
     @GetMapping(path = "/checkIfWordExists/{word}")
     private CheckIfWordExistsDTO checkIfWordExists(@PathVariable("word") String word) {
         logger.info("Request to checkIfWordExists - {}", word);
@@ -40,7 +36,6 @@ public class WordController {
     private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") UUID gameId) throws BadRequestException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
         String requestWord = body.wordSerialize();
-        attemptService.saveAttempt(gameId);
         return wordService.validatePositions(requestWord, gameId);
     }
 }

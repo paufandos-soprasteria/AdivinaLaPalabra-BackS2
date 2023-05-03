@@ -1,9 +1,8 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
-
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -33,10 +32,24 @@ public class Game {
 
     @JsonIgnore
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDateTime date;
+
+    @JsonIgnore
+    @Column(name = "attempts")
+    private int attempts;
 
     public Game(Word word) {
         this.correctWord = Objects.requireNonNull(word);
-        this.date = DateUtils.generateLocalDateNow();
+        this.date = DateUtils.generateLocalDateTimeNow();
+        this.attempts = 0;
+    }
+
+    public Game(UUID id) {
+        this.id = id;
+    }
+
+    public Game(UUID gameId, Word correctWord) {
+        this.id = gameId;
+        this.correctWord = correctWord;
     }
 }

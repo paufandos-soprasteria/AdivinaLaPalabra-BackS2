@@ -1,5 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
@@ -35,7 +36,13 @@ public class GameController {
 
     @GetMapping("/getCorrectWord/{game_id}")
     private CorrectWordDTO getCorrectWord(@PathVariable("game_id") UUID gameId) {
-        logger.info("Request to newGame");
+        logger.info("Request to newGame GameId : "+ gameId);
         return gameService.getCorrectWord(gameId);
+    }
+
+    @GetMapping("/checkFiveAttempts/{game_id}")
+    private CheckAttemptsInRangeDTO checkFiveAttempts(@PathVariable("game_id") UUID gameId) {
+        logger.info("Request to checkFiveAttempts GameId : "+ gameId);
+        return gameService.checkFiveAttempts(gameId);
     }
 }

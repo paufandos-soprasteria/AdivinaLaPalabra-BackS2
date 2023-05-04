@@ -38,10 +38,16 @@ public class Game {
     @Column(name = "attempts")
     private int attempts;
 
+    @JsonIgnore
+    @Column(name = "winned")
+    private boolean winned;
+
+
     public Game(Word word) {
         this.correctWord = Objects.requireNonNull(word);
         this.date = DateUtils.generateLocalDateTimeNow();
         this.attempts = 0;
+        this.winned = false;
     }
 
     public Game(UUID id) {

@@ -23,6 +23,13 @@ public class ErrorHandler {
         return new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
+    @ExceptionHandler({ GameIsWinnedException.class })
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    private ErrorResponseDTO handleGameIsWinnedException(GameIsWinnedException e) {
+        e.printStackTrace();
+        return new ErrorResponseDTO(HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage());
+    }
+
     @ExceptionHandler({ HttpMessageNotReadableException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ErrorResponseDTO handleBadRequestException(HttpMessageNotReadableException e) {

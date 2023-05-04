@@ -4,6 +4,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.GameIsWinnedException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IWordService;
@@ -34,11 +35,14 @@ public class WordServiceImpl implements IWordService {
     }
 
     @Override
-    public List<LetterDTO> validatePositions(String requestWord, UUID gameId) throws BadRequestException {
-        List<LetterDTO> letters = new ArrayList<>();
+    public List<LetterDTO> validatePositions(String requestWord, UUID gameId) throws BadRequestException, GameIsWinnedException {
+
 
         checkIfIsBadWord(requestWord);
         Game game = gameRepository.getReferenceById(gameId);
+
+        if (game.isWinned()) throw new GameIsWinnedException();
+        List<LetterDTO> letters = new ArrayList<>();
         checkAttemptsInRange(game,game.getAttempts());
         String correctWord = game.getCorrectWord().getValue();
 
@@ -50,7 +54,15 @@ public class WordServiceImpl implements IWordService {
             LetterDTO letter = new LetterDTO(tryWordLetter, status, position);
             letters.add(letter);
         });
+        checkGameWinned(letters,game);
         return letters;
+    }
+
+    private void checkGameWinned(List<LetterDTO> letters, Game game) {
+        if(letters.stream().filter(letter -> letter.getStatus() == Status.MATCHED).count() == 5) {
+            game.setWinned(true);
+            gameRepository.save(game);
+        }
     }
 
     private void updateGameAttempts(Game game) {

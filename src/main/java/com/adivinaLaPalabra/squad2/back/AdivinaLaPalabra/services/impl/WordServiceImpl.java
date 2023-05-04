@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.ranges.RangeException;
 
 @Service
 public class WordServiceImpl implements IWordService {
@@ -26,6 +28,7 @@ public class WordServiceImpl implements IWordService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Override
     public Boolean checkIfWordExists(String requestWord) throws RuntimeException {
         return wordRepository.findByValue(requestWord) != null;
     }
@@ -35,8 +38,8 @@ public class WordServiceImpl implements IWordService {
         List<LetterDTO> letters = new ArrayList<>();
 
         checkIfIsBadWord(requestWord);
-
         Game game = gameRepository.getReferenceById(gameId);
+        checkAttemptsInRange(game,game.getAttempts());
         String correctWord = game.getCorrectWord().getValue();
 
         IntStream.range(START_WORD_LENGHT, MAX_WORD_LENGHT).forEach(position -> {
@@ -50,6 +53,11 @@ public class WordServiceImpl implements IWordService {
         return letters;
     }
 
+    private void updateGameAttempts(Game game) {
+        game.setAttempts(game.getAttempts()+1);
+        gameRepository.save(game);
+    }
+
     public Status validateLetter(String correctWord, char tryWordLetter, char correctWordLetter) {
         if (tryWordLetter == correctWordLetter) return Status.MATCHED;
         return correctWord.indexOf(tryWordLetter) >= START_WORD_LENGHT ? Status.CONTAINED : Status.NOT_MATCHED;
@@ -59,5 +67,12 @@ public class WordServiceImpl implements IWordService {
         if (!checkIfWordExists(requestWord)) {
             throw new BadRequestException(requestWord + " no existe.");
         }
+    }
+
+    public void checkAttemptsInRange(Game game, int attempts) throws RangeException {
+        final int MAX_RANGE = 5;
+        if(attempts>=MAX_RANGE) {
+            throw new RangeException((short) HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(),"Ha pasado el límite de intentos");
+        }else updateGameAttempts(game);
     }
 }

@@ -1,6 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DateUtils {
 
@@ -8,4 +9,7 @@ public class DateUtils {
         return LocalDate.now();
     }
 
+    public static LocalDateTime generateLocalDateTimeNow() {
+        return LocalDateTime.now();
+    }
 }

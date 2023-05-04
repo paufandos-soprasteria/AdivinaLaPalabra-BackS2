@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import org.w3c.dom.ranges.RangeException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestControllerAdvice
@@ -42,6 +43,14 @@ public class ErrorHandler {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase());
     }
+
+    @ExceptionHandler({ RangeException.class })
+    @ResponseStatus(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
+    private ErrorResponseDTO handleRangeException(RangeException e) {
+        e.printStackTrace();
+        return new ErrorResponseDTO(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(), "Ha pasado el límite de intentos.");
+    }
+
 
     @ExceptionHandler({ InvalidDataAccessResourceUsageException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

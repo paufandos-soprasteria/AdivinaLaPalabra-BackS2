@@ -35,6 +35,7 @@ public class WordController {
     @PostMapping("/validatePositions/{game_id}")
     private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") UUID gameId) throws BadRequestException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
-        return wordService.validatePositions(body.wordSerialize(), gameId);
+        String requestWord = body.wordSerialize();
+        return wordService.validatePositions(requestWord, gameId);
     }
 }

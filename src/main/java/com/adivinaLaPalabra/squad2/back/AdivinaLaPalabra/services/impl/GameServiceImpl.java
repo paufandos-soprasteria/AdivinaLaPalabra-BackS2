@@ -39,10 +39,7 @@ public class GameServiceImpl implements IGameService {
     public CheckAttemptsInRangeDTO checkFiveAttempts(UUID gameId) {
         final int MAX_RANGE = 5;
         Game game = gameRepository.getReferenceById(gameId);
-        Boolean canMoreAttempts = false;
-        if (game.getAttempts() < MAX_RANGE) {
-            canMoreAttempts = true;
-        }
+        Boolean canMoreAttempts = game.getAttempts() < MAX_RANGE;
         return new CheckAttemptsInRangeDTO(canMoreAttempts);
     }
 

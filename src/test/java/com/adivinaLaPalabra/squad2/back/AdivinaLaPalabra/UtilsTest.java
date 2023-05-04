@@ -22,14 +22,4 @@ public class UtilsTest {
     void generateLocalDateTimeNowTest() {
         assertInstanceOf(LocalDateTime.class, DateUtils.generateLocalDateTimeNow());
     }
-
-    @ParameterizedTest
-    @CsvSource({"1,10,true","9,10,true","10,10,true","6,5,false"})
-    void generateRandomNumberMTest(int number, int range, Boolean valid) {
-        assertEquals(valid,validateNumber(range,number));
-    }
-
-    boolean validateNumber(double maxNumber,double number){
-        return number <= maxNumber;
-    }
 }

@@ -2,7 +2,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
-
 import java.util.UUID;
 
 public class TestHelper {
@@ -19,13 +18,15 @@ public class TestHelper {
 
     public static UUID GAME_ID = UUID.randomUUID();
 
-    public static Game GAME = new Game(GAME_ID);
-
     public static final Word EXISTING_WORD_IN_THE_DICTIONARY = new Word(1, "abaca");
+
+    public static Game GAME = new Game(GAME_ID,EXISTING_WORD_IN_THE_DICTIONARY);
 
     public static final Word REQUEST_WORD = new Word(1, "halla");
 
-    public static final String NONEXISTENT_WORD_IN_THE_DICTIONARY = "aaaaa";
+    public static final String NONEXISTENT_WORD = "aaaaa";
+
+    public static final String EXISTENT_WORD = "abaca";
 
     public static final String NEW_GAME_EXPECTED_DATA = "{\n" +
             "    \"game_id\": \""+GAME_ID +"\"\n" +

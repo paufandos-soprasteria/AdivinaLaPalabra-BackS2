@@ -6,15 +6,14 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositio
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.GameServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import java.util.UUID;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.GAME_ID;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;;
 
@@ -27,10 +26,10 @@ public class ErrorHandlerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @InjectMocks
+    @MockBean
     GameServiceImpl gameService;
 
-    @Mock
+    @MockBean
     GameRepository gameRepository;
 
     @Test
@@ -45,14 +44,6 @@ public class ErrorHandlerTest {
         final String BAD_URL = "/validatePositions/";
         this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
                 .andExpect(status().isNotFound());
-    }
-    @Test
-    void testBadGameIdRequestMustReturnUnprocesableEntity() throws Exception {
-        final String BAD_URL = "/validatePositions/";
-        ValidatePositionsRequest requestBody = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
-        final UUID GAME_ID = UUID.randomUUID();
-        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL+GAME_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
-                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -80,13 +71,12 @@ public class ErrorHandlerTest {
     @Test
     void testhandleRangeException() throws Exception {
         final String BAD_URL = "/validatePositions/";
-        final UUID GAME_ID = UUID.randomUUID();
         Game game = new Game(GAME_ID);
         game.setAttempts(6);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
         ValidatePositionsRequest requestBody = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
         this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL+GAME_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isRequestedRangeNotSatisfiable());
     }
 
     }

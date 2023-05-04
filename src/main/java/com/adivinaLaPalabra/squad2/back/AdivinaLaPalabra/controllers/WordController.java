@@ -3,6 +3,7 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckIfWordExistsDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.GameIsWinnedException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import java.util.List;
@@ -33,7 +34,7 @@ public class WordController {
     }
 
     @PostMapping("/validatePositions/{game_id}")
-    private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") UUID gameId) throws BadRequestException {
+    private List<LetterDTO> validatePositions(@RequestBody ValidatePositionsRequest body, @PathVariable("game_id") UUID gameId) throws BadRequestException, GameIsWinnedException {
         logger.info("Request to validatePositions - game_id: {}", gameId);
         String requestWord = body.wordSerialize();
         return wordService.validatePositions(requestWord, gameId);

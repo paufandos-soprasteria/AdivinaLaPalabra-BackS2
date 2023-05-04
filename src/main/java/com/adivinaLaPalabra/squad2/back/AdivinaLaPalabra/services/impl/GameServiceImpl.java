@@ -2,6 +2,8 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
@@ -10,6 +12,9 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,5 +58,12 @@ public class GameServiceImpl implements IGameService {
 
     private Word getWord(int wordId) {
         return wordRepository.getReferenceById(wordId);
+    }
+
+    public List<GameHistoryDTO> getLastTenGames() {
+        List<Game> games = gameRepository.findAll();
+        List<GameHistoryDTO> gamesDTO = new ArrayList<>();
+        games.stream().limit(10).forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
+        return gamesDTO;
     }
 }

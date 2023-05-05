@@ -13,9 +13,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class GameServiceImpl implements IGameService {
@@ -63,7 +61,8 @@ public class GameServiceImpl implements IGameService {
     public List<GameHistoryDTO> getLastTenGames() {
         List<Game> games = gameRepository.findAll();
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.stream().limit(10).forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
+        games.stream().limit(10).sorted(Comparator.comparing(Game::getDate).reversed())
+                .forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
         return gamesDTO;
     }
 }

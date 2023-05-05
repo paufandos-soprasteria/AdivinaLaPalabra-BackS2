@@ -7,6 +7,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.GameIsWinnedException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +60,7 @@ public class WordServiceImplTest {
     }
 
     @Test
-    public void testValidatePositionsMustReturnWordList() throws BadRequestException {
+    public void testValidatePositionsMustReturnWordList() throws BadRequestException, GameIsWinnedException {
         final UUID GAME_ID = UUID.randomUUID();
         final String REQUEST = "halla";
         final String CORRECT = "abaca";

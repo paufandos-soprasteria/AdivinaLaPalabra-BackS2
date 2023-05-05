@@ -28,36 +28,41 @@ public class TestHelper {
 
     public static final String EXISTENT_WORD = "abaca";
 
-    public static final String NEW_GAME_EXPECTED_DATA = "{\n" +
-            "    \"game_id\": \""+GAME_ID +"\"\n" +
-            "}";
+    public static final String NEW_GAME_EXPECTED_DATA =
+            """
+                {
+                game_id:"""+GAME_ID+"""
+                }
+            """;
 
-    public static final String EXPECTED_LIST_DATA = "[\n" +
-            "    {\n" +
-            "        \"letter\": \"h\",\n" +
-            "        \"status\": \"NOT_MATCHED\",\n" +
-            "        \"position\": 0\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"letter\": \"a\",\n" +
-            "        \"status\": \"MATCHED\",\n" +
-            "        \"position\": 1\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"letter\": \"l\",\n" +
-            "        \"status\": \"NOT_MATCHED\",\n" +
-            "        \"position\": 2\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"letter\": \"l\",\n" +
-            "        \"status\": \"NOT_MATCHED\",\n" +
-            "        \"position\": 3\n" +
-            "    },\n" +
-            "    {\n" +
-            "        \"letter\": \"a\",\n" +
-            "        \"status\": \"MATCHED\",\n" +
-            "        \"position\": 4\n" +
-            "    }\n" +
-            "]";
+    public static final String EXPECTED_LIST_DATA = """
+                [
+                {
+                   letter: h,
+                   status: NOT_MATCHED,
+                   position: 0
+                },
+               {
+                    letter: a,
+                    status: MATCHED,
+                    position: 1
+                },
+                {
+                    letter: l,
+                    status: NOT_MATCHED,
+                    position: 2
+                },
+                {
+                    letter: l,
+                    status: NOT_MATCHED,
+                    position: 3
+                },
+                {
+                    letter:a,
+                    status: MATCHED,
+                    position: 4
+                }
+            ]
+            """;
 
 }

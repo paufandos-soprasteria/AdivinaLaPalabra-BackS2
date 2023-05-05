@@ -61,7 +61,7 @@ public class GameServiceImpl implements IGameService {
     public List<GameHistoryDTO> getLastTenGames() {
         List<Game> games = gameRepository.findAll();
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.stream().limit(10).sorted(Comparator.comparing(Game::getDate).reversed())
+        games.stream().sorted(Comparator.comparing(Game::getDate).reversed()).limit(10)
                 .forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
         return gamesDTO;
     }

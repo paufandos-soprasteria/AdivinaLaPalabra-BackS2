@@ -3,7 +3,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
-
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

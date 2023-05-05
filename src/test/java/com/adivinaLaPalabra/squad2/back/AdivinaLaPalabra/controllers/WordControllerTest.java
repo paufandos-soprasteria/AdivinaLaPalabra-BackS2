@@ -86,7 +86,7 @@ public class WordControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(data));;
+                .andExpect(content().json(data));
     }
 
 }

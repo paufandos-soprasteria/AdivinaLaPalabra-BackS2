@@ -3,17 +3,15 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.GameServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class GameController {
-    
-    private static final Logger logger = LogManager.getLogger(WordController.class);
 
     @Autowired
     private GameServiceImpl gameService;
@@ -27,7 +25,7 @@ public class GameController {
 
     @GetMapping("/newGame")
     private GameDTO newGame() {
-        logger.info("Request to newGame");
+        log.info("Request to newGame");
         return new GameDTO(gameService.newGame().getId());
     }
 }

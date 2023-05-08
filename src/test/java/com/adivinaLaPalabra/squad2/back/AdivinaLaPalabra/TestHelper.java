@@ -1,7 +1,10 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
+import java.util.List;
 import java.util.UUID;
 
 public class TestHelper {
@@ -13,6 +16,7 @@ public class TestHelper {
     public static final String CHECK_IF_WORD_EXISTS_URL = "/checkIfWordExists/word";
 
     public static final String GET_CORRECT_WORD_URL = "/getCorrectWord/";
+    public static final String GET_LAST_TEN_GAMES = "/getLastTenGames";
 
     public static final String NEW_GAME_URL = "/newGame";
 
@@ -27,6 +31,32 @@ public class TestHelper {
     public static final String NONEXISTENT_WORD = "aaaaa";
 
     public static final String EXISTENT_WORD = "abaca";
+
+    public static final List<Game> EXPECTED_GAME_LIST = List.of(
+           new Game(),
+           new Game(),
+           new Game(),
+           new Game(),
+           new Game()
+    );
+
+    public static final List<GameHistoryDTO> EXPECTED_GAME_HISTORY_LIST = List.of(
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5)
+    );
+
+    public static final List<GameHistoryDTO> REQUESTED_GAME_HISTORY_LIST = List.of(
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5)
+    );
+
 
     public static final String NEW_GAME_EXPECTED_DATA =
             """

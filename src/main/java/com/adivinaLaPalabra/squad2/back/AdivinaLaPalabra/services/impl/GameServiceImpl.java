@@ -2,7 +2,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
@@ -12,7 +11,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -59,10 +57,9 @@ public class GameServiceImpl implements IGameService {
     }
 
     public List<GameHistoryDTO> getLastTenGames() {
-        List<Game> games = gameRepository.findAll();
+        List<Game> games = gameRepository.findTop10ByOrderByDateDesc();
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.stream().sorted(Comparator.comparing(Game::getDate).reversed()).limit(10)
-                .forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
         return gamesDTO;
     }
 }

@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +40,7 @@ public class GameController {
 
     @GetMapping("/getLastTenGames")
     private List<GameHistoryDTO> getLastTenGames() {
-        logger.info("Request to getLastTenGames GameId : ");
+        logger.info("Request to getLastTenGames");
         return gameService.getLastTenGames();
     }
 

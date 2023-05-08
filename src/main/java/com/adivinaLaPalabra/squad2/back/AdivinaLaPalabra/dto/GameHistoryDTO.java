@@ -2,8 +2,8 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
+
 @Getter
 public class GameHistoryDTO {
 

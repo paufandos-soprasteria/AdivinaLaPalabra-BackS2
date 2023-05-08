@@ -1,5 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
@@ -7,6 +8,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameReposi
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.GameServiceImpl;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -44,6 +46,9 @@ public class GameControllerTest {
     @Mock
     WordRepository wordRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
         when(gameService.newGame()).thenReturn(GAME);
@@ -59,7 +64,9 @@ public class GameControllerTest {
     }
 
     @Test
-    void testGetCorrectWordMustReturnCorrectWord() {
+    void testGetCorrectWordMustReturnCorrectWord() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_CORRECT_WORD_URL+GAME_ID))
+                .andExpect(status().isOk());
         when(gameService.getCorrectWord(GAME_ID)).thenReturn(new CorrectWordDTO(EXISTENT_WORD));
         final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTENT_WORD);
         CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
@@ -75,5 +82,13 @@ public class GameControllerTest {
         when(gameService.checkFiveAttempts(GAME_ID)).thenReturn(EXPECTED_DTO);
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
+    }
+
+    @Test
+    void testEndpointGetLastTenGames() throws Exception {
+        when(gameService.getLastTenGames()).thenReturn(EXPECTED_GAME_HISTORY_LIST);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(TestHelper.EXPECTED_GAME_HISTORY_LIST)));
     }
 }

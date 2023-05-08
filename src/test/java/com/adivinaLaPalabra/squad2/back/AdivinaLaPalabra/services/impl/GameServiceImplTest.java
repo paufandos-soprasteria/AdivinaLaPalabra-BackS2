@@ -1,7 +1,9 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
@@ -18,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import java.util.List;
 import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,5 +86,12 @@ public class GameServiceImplTest {
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
+    }
+
+    @Test
+    void testGetLastTenGames() {
+        when(gameRepository.findTop10ByOrderByDateDesc()).thenReturn(TestHelper.EXPECTED_GAME_LIST);
+        List<GameHistoryDTO> list = gameService.getLastTenGames();
+        assertEquals(list.size(),TestHelper.EXPECTED_GAME_HISTORY_LIST.size());
     }
 }

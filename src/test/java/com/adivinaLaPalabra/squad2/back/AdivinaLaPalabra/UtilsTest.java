@@ -1,11 +1,13 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.Base64Utils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,23 +20,22 @@ public class UtilsTest {
     }
 
     @Test
-    void generateRandomNumberMustReturnNumberInRangeTenTest() {
-        final int RANGE_10 = 10;
-        final double NUMBER_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        assertTrue(validateNumber(RANGE_10,NUMBER_IN_RANGE_10));
-
+    void generateLocalDateTimeNowTest() {
+        assertInstanceOf(LocalDateTime.class, DateUtils.generateLocalDateTimeNow());
     }
 
     @Test
-    void generateRandomNumberMustReturnNumberNotInRangeTenTest() {
-        final int RANGE_10 = 10;
-        final double NUMBER_NOT_IN_RANGE_10 = NumberUtils.generateRandomNumberInRange(RANGE_10);
-        final double NUMBER_EXPECTED = Math.random();
-        assertFalse(validateNumber(NUMBER_EXPECTED,NUMBER_NOT_IN_RANGE_10));
-
+    void generateZoedDateTimeNowTest() {
+        assertInstanceOf(ZonedDateTime.class, DateUtils.generateZonedDateTime());
     }
 
-    boolean validateNumber(double maxNumber,double number){
-        return number <= maxNumber;
+    @Test
+    void decodeBase64String() {
+        assertEquals(Base64Utils.decode(ENCODED_STRING), DECODED_STRING);
+    }
+
+    @Test
+    void encodeBase64String() {
+        assertEquals(Base64Utils.encode(DECODED_STRING), ENCODED_STRING);
     }
 }

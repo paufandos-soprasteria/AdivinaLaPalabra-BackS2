@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.User;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.UserDetailsImpl;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;

@@ -1,6 +1,6 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
@@ -32,10 +32,30 @@ public class Game {
 
     @JsonIgnore
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDateTime date;
+
+    @JsonIgnore
+    @Column(name = "attempts")
+    private int attempts;
+
+    @JsonIgnore
+    @Column(name = "winned")
+    private boolean winned;
+
 
     public Game(Word word) {
         this.correctWord = Objects.requireNonNull(word);
-        this.date = DateUtils.generateLocalDateNow();
+        this.date = DateUtils.generateLocalDateTimeNow();
+        this.attempts = 0;
+        this.winned = false;
+    }
+
+    public Game(UUID id) {
+        this.id = id;
+    }
+
+    public Game(UUID gameId, Word correctWord) {
+        this.id = gameId;
+        this.correctWord = correctWord;
     }
 }

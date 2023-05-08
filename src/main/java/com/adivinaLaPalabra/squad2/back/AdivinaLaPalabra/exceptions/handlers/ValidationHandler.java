@@ -1,4 +1,4 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,5 +28,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         });
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
+
+
 
 }

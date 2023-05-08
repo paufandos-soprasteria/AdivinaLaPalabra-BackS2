@@ -1,14 +1,16 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.Objects;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "word")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Word {
 
     @Id
@@ -17,10 +19,6 @@ public class Word {
     private int id;
 
     @Column(name = "value")
+    @NonNull
     private String value;
-
-    public Word(int id, String value) {
-        this.id = id;
-        this.value = Objects.requireNonNull(value);
-    }
 }

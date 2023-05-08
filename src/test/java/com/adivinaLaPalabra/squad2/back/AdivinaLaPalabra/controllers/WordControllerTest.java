@@ -21,72 +21,76 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WordControllerTest {
-    @Autowired
-    MockMvc mockMvc;
+        private final String AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiY0dGMVptRnVaRzl6IiwiaWF0IjoxNjgzNTM3NDU5LCJleHAiOjI2ODM1Mzc0NTh9.1wcPPYvUA5e6FCsPvfjp073ioL_kY4plPNykmFmGvCs";
 
-    @MockBean
-    WordServiceImpl wordService;
+        @Autowired
+        MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+        @MockBean
+        WordServiceImpl wordService;
 
-    @Test
-    void testCheckIfwordExtistMustReturnOKStatus() throws Exception {
-        final String OK_URL = "/checkIfWordExists/word";
+        @Autowired
+        ObjectMapper objectMapper;
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get(OK_URL))
-                .andExpect(status().isOk());
-    }
+        @Test
+        void testCheckIfwordExtistMustReturnOKStatus() throws Exception {
+                final String OK_URL = "/checkIfWordExists/word";
 
-    @Test
-    public void testEndPointValidatePositionsReturnOkStatus() throws Exception {
-        final UUID GAME_ID = UUID.randomUUID();
-        final String VALIDATE_POSITIONS_URL = "/validatePositions/{game_id}";
-        ValidatePositionsRequest requestBody = new ValidatePositionsRequest('h', 'a', 'l', 'l', 'a');
-        final String REQUEST_WORD = "halla";
+                this.mockMvc.perform(MockMvcRequestBuilders.get(OK_URL)
+                                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                                .andExpect(status().isOk());
+        }
 
-        final List<LetterDTO> EXPECTED_LIST = List.of(
-                new LetterDTO('h', LetterDTO.Status.NOT_MATCHED,0),
-                new LetterDTO('a', LetterDTO.Status.MATCHED,1),
-                new LetterDTO('l', LetterDTO.Status.NOT_MATCHED,2),
-                new LetterDTO('l', LetterDTO.Status.NOT_MATCHED,3),
-                new LetterDTO('a', LetterDTO.Status.MATCHED,4)
-        );
+        @Test
+        public void testEndPointValidatePositionsReturnOkStatus() throws Exception {
+                final UUID GAME_ID = UUID.randomUUID();
+                final String VALIDATE_POSITIONS_URL = "/validatePositions/{game_id}";
+                ValidatePositionsRequest requestBody = new ValidatePositionsRequest('h', 'a', 'l', 'l', 'a');
+                final String REQUEST_WORD = "halla";
 
-        final String data = "[\n" +
-                "    {\n" +
-                "        \"letter\": \"h\",\n" +
-                "        \"status\": \"NOT_MATCHED\",\n" +
-                "        \"position\": 0\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"letter\": \"a\",\n" +
-                "        \"status\": \"MATCHED\",\n" +
-                "        \"position\": 1\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"letter\": \"l\",\n" +
-                "        \"status\": \"NOT_MATCHED\",\n" +
-                "        \"position\": 2\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"letter\": \"l\",\n" +
-                "        \"status\": \"NOT_MATCHED\",\n" +
-                "        \"position\": 3\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"letter\": \"a\",\n" +
-                "        \"status\": \"MATCHED\",\n" +
-                "        \"position\": 4\n" +
-                "    }\n" +
-                "]";
+                final List<LetterDTO> EXPECTED_LIST = List.of(
+                                new LetterDTO('h', LetterDTO.Status.NOT_MATCHED, 0),
+                                new LetterDTO('a', LetterDTO.Status.MATCHED, 1),
+                                new LetterDTO('l', LetterDTO.Status.NOT_MATCHED, 2),
+                                new LetterDTO('l', LetterDTO.Status.NOT_MATCHED, 3),
+                                new LetterDTO('a', LetterDTO.Status.MATCHED, 4));
 
-        when(wordService.validatePositions(REQUEST_WORD,GAME_ID)).thenReturn(EXPECTED_LIST);
+                final String data = "[\n" +
+                                "    {\n" +
+                                "        \"letter\": \"h\",\n" +
+                                "        \"status\": \"NOT_MATCHED\",\n" +
+                                "        \"position\": 0\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "        \"letter\": \"a\",\n" +
+                                "        \"status\": \"MATCHED\",\n" +
+                                "        \"position\": 1\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "        \"letter\": \"l\",\n" +
+                                "        \"status\": \"NOT_MATCHED\",\n" +
+                                "        \"position\": 2\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "        \"letter\": \"l\",\n" +
+                                "        \"status\": \"NOT_MATCHED\",\n" +
+                                "        \"position\": 3\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "        \"letter\": \"a\",\n" +
+                                "        \"status\": \"MATCHED\",\n" +
+                                "        \"position\": 4\n" +
+                                "    }\n" +
+                                "]";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(data));
-    }
+                when(wordService.validatePositions(REQUEST_WORD, GAME_ID)).thenReturn(EXPECTED_LIST);
+
+                this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestBody))
+                                .header("Authorization","Bearer " + AUTH_TOKEN))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(data));
+        }
 
 }

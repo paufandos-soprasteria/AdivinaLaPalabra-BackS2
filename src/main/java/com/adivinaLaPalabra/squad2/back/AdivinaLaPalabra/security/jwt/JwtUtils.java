@@ -1,12 +1,12 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt;
 
 import java.time.ZonedDateTime;
-import java.util.Base64;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.UserDetailsImpl;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.Base64Utils;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -24,9 +24,9 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-        String userName = Base64.getEncoder().encodeToString(userPrincipal.getName().getBytes());
+        String userName = Base64Utils.encode(userPrincipal.getName());
 
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = DateUtils.generateZonedDateTime();
         ZonedDateTime tokenExpiredDate = now.plusSeconds(jwtExpirationSeconds);
 
         return JWT.create()

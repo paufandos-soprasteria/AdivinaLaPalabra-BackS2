@@ -18,8 +18,10 @@ public class GameControllerTest {
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
         final String NEW_GAME_URL = "/newGame";
+        final String AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiY0dGMVptRnVaRzl6IiwiaWF0IjoxNjgzNTM3NDU5LCJleHAiOjI2ODM1Mzc0NTh9.1wcPPYvUA5e6FCsPvfjp073ioL_kY4plPNykmFmGvCs";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL)
+                .header("Authorization","Bearer " + AUTH_TOKEN))
                 .andExpect(status().isOk());
     }
 }

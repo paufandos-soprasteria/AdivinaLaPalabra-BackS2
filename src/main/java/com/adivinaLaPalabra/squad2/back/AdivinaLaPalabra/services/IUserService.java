@@ -5,6 +5,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LoginDTO;
 
 public interface IUserService {
 
-    AuthDTO validateUser(LoginDTO user);
+    public AuthDTO validateUser(LoginDTO user);
     
 }

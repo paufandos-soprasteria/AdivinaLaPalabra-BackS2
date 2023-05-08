@@ -1,6 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,9 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtTokenFi
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
+
+    @Value("${security.allowed-routes}")
+    private String allowedRoutes;
 
     @Autowired
     UserDetailsService userDetailsService;
@@ -61,7 +65,7 @@ public class WebSecurityConfig {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests().requestMatchers(allowedRoutes).permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

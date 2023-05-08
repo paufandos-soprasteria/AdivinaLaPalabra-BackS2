@@ -12,7 +12,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IUserService;
 
 @Service
-
 public class UserServiceImpl implements IUserService {
     @Autowired
     AuthenticationManager authenticationManager;

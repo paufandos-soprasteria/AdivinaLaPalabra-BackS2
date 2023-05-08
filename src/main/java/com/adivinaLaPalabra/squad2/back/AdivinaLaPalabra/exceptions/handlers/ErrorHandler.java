@@ -1,4 +1,4 @@
-package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions;
+package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.handlers;
 
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import jakarta.persistence.EntityNotFoundException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -22,7 +22,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     private ErrorResponseDTO handleUsernameNotFoundException(UsernameNotFoundException e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+        return new ErrorResponseDTO(HttpStatus.UNAUTHORIZED.value(), "El nombre de usuario, no existe.");
     }
 
     @ExceptionHandler({ BadCredentialsException.class })

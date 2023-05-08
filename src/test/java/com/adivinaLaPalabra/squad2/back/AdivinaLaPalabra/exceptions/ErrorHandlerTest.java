@@ -15,29 +15,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ErrorHandlerTest {
 
+    private final String AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiY0dGMVptRnVaRzl6IiwiaWF0IjoxNjgzNTM3NDU5LCJleHAiOjI2ODM1Mzc0NTh9.1wcPPYvUA5e6FCsPvfjp073ioL_kY4plPNykmFmGvCs";
+
     @Autowired
     MockMvc mockMvc;
+
     @Autowired
     ObjectMapper objectMapper;
 
     @Test
     void testBadURLRequestMustReturn404Status() throws Exception {
         final String BAD_URL = "/NotNonexistentURL";
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL)
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testIncompleteURLRequestMustReturn404Status() throws Exception {
         final String BAD_URL = "/validatePositions/";
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL)
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isNotFound());
     }
+
     @Test
     void testBadGameIdRequestMustReturnUnprocesableEntity() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49";
         ValidatePositionsRequest requestBody = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
-        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
+        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody))
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -45,22 +54,29 @@ public class ErrorHandlerTest {
     void testBadRequestException() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49d07b28627a";
         ValidatePositionsRequest requestBody = new ValidatePositionsRequest(' ', 'b', 'a', 'c', 'a');
-        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
+        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody))
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testHttpMessageNotReadableException() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49d07b28627a";
-        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL).contentType(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testHandleDatabaseException() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49d07b28627a";
-        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL).contentType(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + AUTH_TOKEN))
                 .andExpect(status().isBadRequest());
     }
 
-    }
+}

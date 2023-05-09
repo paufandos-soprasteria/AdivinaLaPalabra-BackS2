@@ -3,7 +3,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,7 +34,7 @@ public class UserDetailsServiceImplTest {
         final User USER_LOADED = new User(USERNAME_TO_BE_LOADED, "anypassword");
         final UserDetails EXPECTED_USER = UserDetailsImpl.build(USER_LOADED);
 
-        when(userRepository.findByName(USERNAME_TO_BE_LOADED)).thenReturn(Optional.of(USER_LOADED));
+        when(userRepository.findByName(USERNAME_TO_BE_LOADED)).thenReturn(USER_LOADED);
         UserDetails user = userDetailsServiceImpl.loadUserByUsername(USERNAME_TO_BE_LOADED);
 
         assertThat(user).usingRecursiveComparison().isEqualTo(EXPECTED_USER);

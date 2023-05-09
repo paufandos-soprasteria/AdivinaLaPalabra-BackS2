@@ -31,6 +31,11 @@ public class Game {
     private Word correctWord;
 
     @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @JsonIgnore
     @Column(name = "date")
     private LocalDateTime date;
 
@@ -43,11 +48,12 @@ public class Game {
     private boolean winned;
 
 
-    public Game(Word word) {
+    public Game(Word word, User userId) {
         this.correctWord = Objects.requireNonNull(word);
         this.date = DateUtils.generateLocalDateTimeNow();
         this.attempts = 0;
         this.winned = false;
+        this.user = userId;
     }
 
     public Game(UUID id) {

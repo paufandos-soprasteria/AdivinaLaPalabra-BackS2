@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.AuthHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ public class GameControllerTest {
 
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
-        when(gameService.newGame()).thenReturn(GAME);
+        when(gameService.newGame(USER_REQUEST_DTO.getName())).thenReturn(GAME);
         this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().json(NEW_GAME_EXPECTED_DATA));
@@ -88,7 +89,7 @@ public class GameControllerTest {
 
     @Test
     void testEndpointGetLastTenGames() throws Exception {
-        when(gameService.getLastTenGames()).thenReturn(EXPECTED_GAME_HISTORY_LIST);
+        when(gameService.getLastTenGames(USER_REQUEST_DTO.getName())).thenReturn(EXPECTED_GAME_HISTORY_LIST);
         this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL))
                 .andExpect(status().isOk());
     }

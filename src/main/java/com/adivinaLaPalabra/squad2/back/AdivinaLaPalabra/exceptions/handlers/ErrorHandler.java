@@ -13,12 +13,20 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.GameIsWinnedException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
 import jakarta.persistence.EntityNotFoundException;
 import org.w3c.dom.ranges.RangeException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestControllerAdvice
 public class ErrorHandler {
+
+    @ExceptionHandler({ InsufficientGamesException.class })
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    private ErrorResponseDTO handleInsufficientGamesException(InsufficientGamesException e) {
+        e.printStackTrace();
+        return new ErrorResponseDTO(HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage());
+    }
 
     @ExceptionHandler({ GameIsWinnedException.class })
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
@@ -45,7 +53,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ErrorResponseDTO handleHttpMessageNotReadableException(Exception e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), "Formato de datos incorrecto.");
+        return new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), "Bad request");
     }
 
     @ExceptionHandler({ NoHandlerFoundException.class, EntityNotFoundException.class })

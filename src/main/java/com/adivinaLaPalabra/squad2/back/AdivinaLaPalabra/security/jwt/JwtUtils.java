@@ -43,4 +43,10 @@ public class JwtUtils {
         return jwt.getClaim("user").asString();
     }
 
+    public String getUserFromToken(String jwt){
+        String token = jwt.substring(7, jwt.length());
+        String username = validateTokenAndRetrieveSubject(token);
+        return Base64Utils.decode(username);
+    }
+
 }

@@ -1,8 +1,5 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO.Status;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
@@ -21,7 +18,12 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import java.util.List;
 import java.util.stream.IntStream;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
+
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -68,11 +70,11 @@ public class WordServiceImplTest {
 
         final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
 
-        when(wordRepository.findByValue(REQUEST_WORD.getValue())).thenReturn(REQUEST_WORD);
+        when(wordRepository.findByValue(REQUEST_WORD_IN_THE_DICTIONARY.getValue())).thenReturn(REQUEST_WORD_IN_THE_DICTIONARY);
         when(gameRepository.save(NEW_GAME)).thenReturn(NEW_GAME);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(NEW_GAME);
 
-        assertLettersAreExpected(EXPECTED_LIST, wordServiceImpl.validatePositions(REQUEST_WORD.getValue(), GAME_ID));
+        assertLettersAreExpected(EXPECTED_LIST, wordServiceImpl.validatePositions(REQUEST_WORD_IN_THE_DICTIONARY.getValue(), GAME_ID));
     }
 
     void assertLettersAreExpected(List<LetterDTO> expectedLetters, List<LetterDTO> requestLetters) {

@@ -32,11 +32,24 @@ public class JWTAuthenticationTest {
     @Test
     public void testEndPointThatRequiresTokenWithoutTokenMustRetunrUnauthorizedStatus() throws Exception {
         final String URL_NOT_ALLOWED = "/newGame";
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_NOT_ALLOWED)).andExpect(status().isUnauthorized());
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_NOT_ALLOWED))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void doFilterInternalMustVaidatePassedToken() throws Exception {
+
+        // TO DO
+
+    }
+
+    @Test
+    public void validUserLoginMustReturnAuthToken() throws Exception {
+        //TO DO
+    }
+
+    @Test
+    public void invalidUserLoginMustReturnUnauthorizedStatus() throws Exception {
 
         // TO DO
 

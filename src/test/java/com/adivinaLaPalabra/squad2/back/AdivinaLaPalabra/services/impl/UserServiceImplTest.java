@@ -1,22 +1,25 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import static org.junit.Assert.assertEquals;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.AuthHelper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.AuthDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
 
 @SpringBootTest
-@RunWith(MockitoJUnitRunner.Silent.class) 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
     @InjectMocks
@@ -37,8 +40,8 @@ public class UserServiceImplTest {
         SecurityContextHolder.getContext().setAuthentication(AUTHENTICATION);
         when(jwtUtils.generateJwtToken(AUTHENTICATION)).thenReturn(TOKEN_EXPECTED_RESPONSE.token());
 
-        String token = jwtUtils.generateJwtToken(AUTHENTICATION);
-        assertEquals(TOKEN_EXPECTED_RESPONSE.token(),token);
+        AuthDTO responsed_dto = userServiceImpl.validateUser(USER_REQUEST_DTO);
+        assertEquals(TOKEN_EXPECTED_RESPONSE,responsed_dto);
 
     }
 }

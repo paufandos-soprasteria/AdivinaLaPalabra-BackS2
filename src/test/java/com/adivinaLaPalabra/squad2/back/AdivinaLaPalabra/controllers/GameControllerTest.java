@@ -16,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(value = "paufandos")
 public class GameControllerTest {
 
     @Autowired
@@ -47,23 +50,20 @@ public class GameControllerTest {
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
         when(gameService.newGame()).thenReturn(GAME);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().json(NEW_GAME_EXPECTED_DATA));
     }
 
     @Test
     void testEndpointCheckAttemptsInRangeMustReturnOK() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(CHECK_ATTEMPTS_IN_RANGE_URL + GAME_ID)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(CHECK_ATTEMPTS_IN_RANGE_URL + GAME_ID))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testGetCorrectWordMustReturnCorrectWord() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_CORRECT_WORD_URL + GAME_ID)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_CORRECT_WORD_URL + GAME_ID))
                 .andExpect(status().isOk());
 
         when(gameService.getCorrectWord(GAME_ID)).thenReturn(new CorrectWordDTO(EXISTENT_WORD));
@@ -89,8 +89,7 @@ public class GameControllerTest {
     @Test
     void testEndpointGetLastTenGames() throws Exception {
         when(gameService.getLastTenGames()).thenReturn(EXPECTED_GAME_HISTORY_LIST);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES)
-                .header("Authorization","Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL))
                 .andExpect(status().isOk());
     }
 }

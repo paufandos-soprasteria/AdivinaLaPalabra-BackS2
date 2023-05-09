@@ -10,15 +10,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.GAME_ID;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.UtilsHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(value = "paufandos")
 public class ErrorHandlerTest {
     @Autowired
     MockMvc mockMvc;
@@ -32,16 +34,14 @@ public class ErrorHandlerTest {
     @Test
     void testBadURLRequestMustReturn404Status() throws Exception {
         final String BAD_URL = "/NotNonexistentURL";
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testIncompleteURLRequestMustReturn404Status() throws Exception {
         final String BAD_URL = "/validatePositions/";
-        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(BAD_URL))
                 .andExpect(status().isNotFound());
     }
 
@@ -51,8 +51,7 @@ public class ErrorHandlerTest {
         ValidatePositionsRequest requestBody = new ValidatePositionsRequest(' ', 'b', 'a', 'c', 'a');
         this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(requestBody))
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                .content(asJsonString(requestBody)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -60,8 +59,7 @@ public class ErrorHandlerTest {
     void testHttpMessageNotReadableException() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49d07b28627a";
         this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -69,8 +67,7 @@ public class ErrorHandlerTest {
     void testHandleDatabaseException() throws Exception {
         final String BAD_URL = "/validatePositions/dae36a93-0243-4006-ba2c-49d07b28627a";
         this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -85,8 +82,7 @@ public class ErrorHandlerTest {
         ValidatePositionsRequest requestBody = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
         this.mockMvc.perform(MockMvcRequestBuilders.post(BAD_URL + GAME_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(requestBody))
-                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                .content(asJsonString(requestBody)))
                 .andExpect(status().isRequestedRangeNotSatisfiable());
     }
 

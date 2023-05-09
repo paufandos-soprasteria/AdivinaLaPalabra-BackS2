@@ -1,6 +1,5 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.WordServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -9,17 +8,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
 import java.util.List;
-import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.UtilsHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(value = "paufandos")
 public class WordControllerTest {
         @Autowired
         MockMvc mockMvc;
@@ -29,8 +32,7 @@ public class WordControllerTest {
 
         @Test
         void testCheckIfwordExtistMustReturnOKStatus() throws Exception {
-                this.mockMvc.perform(MockMvcRequestBuilders.get(CHECK_IF_WORD_EXISTS_URL)
-                                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                this.mockMvc.perform(MockMvcRequestBuilders.get(CHECK_IF_WORD_EXISTS_URL))
                                 .andExpect(status().isOk());
         }
 
@@ -49,10 +51,9 @@ public class WordControllerTest {
 
                 this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(asJsonString(requestBody))
-                                .header("Authorization", "Bearer " + AUTH_TOKEN))
+                                .content(asJsonString(requestBody)))
                                 .andExpect(status().isOk())
-                                .andExpect(content().json(TestHelper.EXPECTED_LIST_DATA));
+                                .andExpect(content().json(EXPECTED_LIST_DATA));
                 ;
         }
 

@@ -27,7 +27,7 @@ public class GameServiceImpl implements IGameService {
         int dictionarySize = getDictionarySize();
         int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
         Word word = getWord(wordId);
-        
+
         return saveNewGame(new Game(word));
     }
 
@@ -59,7 +59,7 @@ public class GameServiceImpl implements IGameService {
     public List<GameHistoryDTO> getLastTenGames() {
         List<Game> games = gameRepository.findTop10ByOrderByDateDesc();
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(),game.isWinned(),game.getAttempts())));
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.isWinned(), game.getAttempts())));
         return gamesDTO;
     }
 }

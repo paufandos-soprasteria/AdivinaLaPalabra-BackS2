@@ -1,16 +1,7 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Getter
-public class GameDTO {
-
-    @JsonProperty("game_id")
-    private final UUID gameId;
-
-    public GameDTO(UUID gameId) {
-        this.gameId = gameId;
-    }
+public record GameDTO(@JsonProperty("game_id") UUID gameId) {
 }

@@ -1,11 +1,9 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl;
 
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.TestHelper;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRangeDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
-import java.util.UUID;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -48,50 +47,50 @@ public class GameServiceImplTest {
 
     @Test
     void testNewGameMustReturnAnInt() {
-        final UUID GAME_ID = UUID.randomUUID();
-        final Word CORRECT_WORD = new Word(1, "abaca");
-        final Game NEW_GAME = new Game(CORRECT_WORD);
-        final Game SAVE_GAME = new Game(CORRECT_WORD);
+        final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
+        final Game SAVE_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
         SAVE_GAME.setId(GAME_ID);
         NEW_GAME.setId(GAME_ID);
 
-        when(wordRepository.getReferenceById(anyInt())).thenReturn(CORRECT_WORD);
+        when(wordRepository.getReferenceById(anyInt())).thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
 
         gameService.newGame();
         Game saveGame = captor.getValue();
-        assertEquals(CORRECT_WORD,saveGame.getCorrectWord());
+        assertEquals(EXISTING_WORD_IN_THE_DICTIONARY,saveGame.getCorrectWord());
     }
 
     @Test
     void testGetCorrectWordMustReturnCorrectWord() {
-        final UUID GAME_ID = UUID.randomUUID();
-        final String WORD = "abaca";
-        final Word CORRECT_WORD = new Word(1, WORD);
-        Game game = new Game(GAME_ID,CORRECT_WORD);
+        Game game = new Game(GAME_ID,EXISTING_WORD_IN_THE_DICTIONARY);
+
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
-        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(WORD);
+
+        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
         CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
-        assertEquals(EXPEXTED_WORD.getCorrectWord(),correctWordDTO.getCorrectWord());
+        assertEquals(EXPEXTED_WORD.correctWord(),correctWordDTO.correctWord());
     }
 
     @ParameterizedTest
     @CsvSource(value = {"1,true","4,true","5,false","10,false"})
     void testCheckFiveAttemptsMustReturnInRange(int attemptNumber,boolean expectedResult) {
-        final UUID GAME_ID = UUID.randomUUID();
         final CheckAttemptsInRangeDTO EXPECTED_DTO = new CheckAttemptsInRangeDTO(expectedResult);
         Game game = new Game(GAME_ID);
         game.setAttempts(attemptNumber);
+
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
+
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
     }
 
     @Test
     void testGetLastTenGames() {
-        when(gameRepository.findTop10ByOrderByDateDesc()).thenReturn(TestHelper.EXPECTED_GAME_LIST);
+        when(gameRepository.findTop10ByOrderByDateDesc()).thenReturn(EXPECTED_GAME_LIST);
+
         List<GameHistoryDTO> list = gameService.getLastTenGames();
-        assertEquals(list.size(),TestHelper.EXPECTED_GAME_HISTORY_LIST.size());
+
+        assertEquals(list.size(),EXPECTED_GAME_HISTORY_LIST.size());
     }
 }

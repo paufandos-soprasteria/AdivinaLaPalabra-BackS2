@@ -8,12 +8,9 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.Insufficient
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.User;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -30,18 +27,15 @@ public class GameServiceImpl implements IGameService {
     private WordRepository wordRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    private UserServiceImpl userServiceImpl ;
 
     @Override
-    public Game newGame(String userToken) {
+    public Game newGame(String username) {
         int dictionarySize = getDictionarySize();
         int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
 
         Word word = getWord(wordId);
-        User user = getUserFromToken(userToken);
+        User user = userServiceImpl.getUserByUsername(username);
 
         return saveNewGame(new Game(word, user));
     }
@@ -60,15 +54,16 @@ public class GameServiceImpl implements IGameService {
     }
 
     @Override
-    public List<GameHistoryDTO> getLastTenGames(String userToken) {
-        UUID userId = getUserFromToken(userToken).getId();
+    public List<GameHistoryDTO> getLastTenGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
         List<Game> games = gameRepository.findTop10ByUser_IdOrderByDateDesc(userId);
         return serializeToDTO(games);
     }
 
     @Override
-    public List<GameHistoryDTO> getAllGames(String userToken) throws InsufficientGamesException {
-        UUID userId = getIdIfHasMoreThan10Games(userToken);
+    public List<GameHistoryDTO> getAllGames(String username) throws InsufficientGamesException {
+        checkIfUserHasEnoughGames(username);
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
         List<Game> games = gameRepository.findAllByUser_Id(userId);
         return serializeToDTO(games);
     }
@@ -77,15 +72,13 @@ public class GameServiceImpl implements IGameService {
         return gameRepository.save(newGame);
     }
 
-    private boolean hasMoreThanTenGames(String userToken) {
-        UUID userId = getUserFromToken(userToken).getId();
-        return gameRepository.findAllByUser_Id(userId).size() > MAX_GAMES_SIZE;
+    private boolean hasEnoughGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
+        return gameRepository.countByUser_Id(userId) > MAX_GAMES_SIZE;
     }
 
-    private UUID getIdIfHasMoreThan10Games(String userToken) throws InsufficientGamesException {
-        if (!hasMoreThanTenGames(userToken))
-            throw new InsufficientGamesException();
-        return getUserFromToken(userToken).getId();
+    public void checkIfUserHasEnoughGames(String username) throws InsufficientGamesException {
+        if (!hasEnoughGames(username)) throw new InsufficientGamesException();
     }
 
     private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
@@ -101,13 +94,4 @@ public class GameServiceImpl implements IGameService {
     private Word getWord(int wordId) {
         return wordRepository.getReferenceById(wordId);
     }
-
-    private User getUserFromToken(String userToken) {
-        String username = jwtUtils.getUsernameFromAuthHeader(userToken);
-        User user = userRepository.findByName(username);
-        if (user == null)
-            throw new EntityNotFoundException("No se ha encontrado el usuario con el nombre" + username);
-        return user;
-    }
-
 }

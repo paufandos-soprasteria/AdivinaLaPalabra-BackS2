@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public interface IGameService {
 
-    public Game newGame(String userToken);
+    public Game newGame(String username);
 
     public CorrectWordDTO getCorrectWord(UUID gameId);
 
     public CheckAttemptsInRangeDTO checkFiveAttempts(UUID gameId);
 
-    public List<GameHistoryDTO> getLastTenGames(String userToken);
+    public List<GameHistoryDTO> getLastTenGames(String username);
 
-    public List<GameHistoryDTO> getAllGames(String userToken) throws InsufficientGamesException;
+    public List<GameHistoryDTO> getAllGames(String username) throws InsufficientGamesException;
 }

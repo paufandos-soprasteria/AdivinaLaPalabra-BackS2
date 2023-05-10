@@ -75,9 +75,9 @@ public class ErrorHandlerTest {
 
     @Test
     void testHandleInsufficientGamesExceptionMustReturn406Status() throws Exception {
-        when(gameService.getAllGames(AUTH_TOKEN)).thenThrow(new InsufficientGamesException());
+        when(gameService.getAllGames(DEFAULT_USERNAME)).thenThrow(new InsufficientGamesException());
         this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_GAMES_URL)
-                .header(AUTH_HEADER, AUTH_TOKEN))
+                .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
                 .andExpect(status().isNotAcceptable());
     }
 

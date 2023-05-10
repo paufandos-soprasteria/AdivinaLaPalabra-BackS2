@@ -58,11 +58,11 @@ public class Game {
         this.correctWord = correctWord;
     }
 
-    public Game(Word word, User userId) {
+    public Game(Word word, User user) {
         this.correctWord = Objects.requireNonNull(word);
         this.date = DateUtils.generateLocalDateTimeNow();
         this.attempts = 0;
         this.winned = false;
-        this.user = userId;
+        this.user = user;
     }
 }

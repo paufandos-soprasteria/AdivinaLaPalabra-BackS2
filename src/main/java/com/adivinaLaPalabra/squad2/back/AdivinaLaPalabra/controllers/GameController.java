@@ -2,6 +2,7 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.controllers;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.*;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.impl.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class GameController {
     @Autowired
     private GameServiceImpl gameService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @ExceptionHandler({ InvalidDataAccessResourceUsageException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private ErrorResponseDTO handleDatabaseExceptions(InvalidDataAccessResourceUsageException e) {
@@ -28,9 +32,10 @@ public class GameController {
     }
 
     @GetMapping("/newGame")
-    private GameDTO newGame(@RequestHeader(name = "Authorization") String token) {
+    private GameDTO newGame(@RequestHeader(name = "Authorization") String authHeader) {
         log.info("Request to newGame");
-        return new GameDTO(gameService.newGame(token).getId());
+        String username = jwtUtils.getUsernameFromAuthHeader(authHeader);
+        return new GameDTO(gameService.newGame(username).getId());
     }
 
     @GetMapping("/getCorrectWord/{game_id}")
@@ -46,16 +51,18 @@ public class GameController {
     }
 
     @GetMapping("/getLastTenGames")
-    private List<GameHistoryDTO> getLastTenGames(@RequestHeader(name = "Authorization") String token)
+    private List<GameHistoryDTO> getLastTenGames(@RequestHeader(name = "Authorization") String authHeader)
             throws InsufficientGamesException {
         log.info("Request to getLastTenGames");
-        return gameService.getLastTenGames(token);
+        String username = jwtUtils.getUsernameFromAuthHeader(authHeader);
+        return gameService.getLastTenGames(username);
     }
 
     @GetMapping("/getAllGames")
-    private List<GameHistoryDTO> getAllGames(@RequestHeader(name = "Authorization") String token)
+    private List<GameHistoryDTO> getAllGames(@RequestHeader(name = "Authorization") String authHeader)
             throws InsufficientGamesException {
         log.info("Request to getLastTenGames");
-        return gameService.getAllGames(token);
+        String username = jwtUtils.getUsernameFromAuthHeader(authHeader);
+        return gameService.getAllGames(username);
     }
 }

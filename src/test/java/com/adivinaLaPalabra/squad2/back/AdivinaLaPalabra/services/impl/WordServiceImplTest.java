@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import java.util.List;
 import java.util.stream.IntStream;
-
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.AuthHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -39,42 +39,36 @@ public class WordServiceImplTest {
     GameRepository gameRepository;
 
     @Test
-    void testCheckIfWordExistsMustReturnTrueIfWordExist() {
-        when(wordRepository.findByValue(EXISTING_WORD_IN_THE_DICTIONARY.getValue()))
-                .thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
-
-        Boolean assertDictionaryWord = wordServiceImpl
-                .checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
-
-        assertTrue(assertDictionaryWord);
-    }
+     void testCheckIfWordExistsMustReturnTrueIfWordExist() {
+         when(wordRepository.findByValue(EXISTING_WORD_IN_THE_DICTIONARY.getValue()))
+                 .thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
+         Boolean assertDictionaryWord = wordServiceImpl
+                 .checkIfWordExists(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
+         assertTrue(assertDictionaryWord);
+     }
 
     @Test
-    void testCheckIfWordExistsMustReturnFalseIfWordNotExist() {
-        when(wordRepository.findByValue(NONEXISTENT_WORD)).thenReturn(null);
-
-        Boolean assertDictionaryWord = wordServiceImpl.checkIfWordExists(NONEXISTENT_WORD);
-
-        assertFalse(assertDictionaryWord);
-    }
+     void testCheckIfWordExistsMustReturnFalseIfWordNotExist() {
+         when(wordRepository.findByValue(NONEXISTENT_WORD)).thenReturn(null);
+         Boolean assertDictionaryWord = wordServiceImpl.checkIfWordExists(NONEXISTENT_WORD);
+         assertFalse(assertDictionaryWord);
+     }
 
     @Test
     public void testValidatePositionsMustReturnWordList() throws BadRequestException, GameIsWinnedException {
-
         final List<LetterDTO> EXPECTED_LIST = List.of(
                 new LetterDTO('h', Status.NOT_MATCHED, 0),
                 new LetterDTO('a', Status.CONTAINED, 1),
                 new LetterDTO('l', Status.NOT_MATCHED, 2),
                 new LetterDTO('l', Status.NOT_MATCHED, 3),
                 new LetterDTO('a', Status.MATCHED, 4));
-
-        final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
-
-        when(wordRepository.findByValue(REQUEST_WORD_IN_THE_DICTIONARY.getValue())).thenReturn(REQUEST_WORD_IN_THE_DICTIONARY);
+        final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY, DEFAULT_USER);
+        when(wordRepository.findByValue(REQUEST_WORD_IN_THE_DICTIONARY.getValue()))
+                .thenReturn(REQUEST_WORD_IN_THE_DICTIONARY);
         when(gameRepository.save(NEW_GAME)).thenReturn(NEW_GAME);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(NEW_GAME);
-
-        assertLettersAreExpected(EXPECTED_LIST, wordServiceImpl.validatePositions(REQUEST_WORD_IN_THE_DICTIONARY.getValue(), GAME_ID));
+        assertLettersAreExpected(EXPECTED_LIST,
+                wordServiceImpl.validatePositions(REQUEST_WORD_IN_THE_DICTIONARY.getValue(), GAME_ID));
     }
 
     void assertLettersAreExpected(List<LetterDTO> expectedLetters, List<LetterDTO> requestLetters) {

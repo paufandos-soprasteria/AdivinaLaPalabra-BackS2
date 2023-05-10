@@ -13,6 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.ErrorResponseDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.BadRequestException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.GameIsWinnedException;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
 import jakarta.persistence.EntityNotFoundException;
 import org.w3c.dom.ranges.RangeException;
 
@@ -20,9 +21,9 @@ import org.w3c.dom.ranges.RangeException;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({ GameIsWinnedException.class })
+    @ExceptionHandler({ GameIsWinnedException.class, InsufficientGamesException.class })
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    private ErrorResponseDTO handleGameIsWinnedException(GameIsWinnedException e) {
+    private ErrorResponseDTO handleGameIsWinnedException(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage());
     }
@@ -31,12 +32,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
     private ErrorResponseDTO handleRangeException(RangeException e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(),"Ha pasado el límite de intentos.");
+        return new ErrorResponseDTO(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(),
+                "Ha pasado el límite de intentos.");
     }
 
     @ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    private ErrorResponseDTO handleBadCredentialsException(BadCredentialsException e) {
+    private ErrorResponseDTO handleBadCredentialsException(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.UNAUTHORIZED.value(), "El usuario y/o la contraseña no son correctos.");
     }
@@ -45,7 +47,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private ErrorResponseDTO handleHttpMessageNotReadableException(Exception e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), "Formato de datos incorrecto.");
+        return new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), "Bad request");
     }
 
     @ExceptionHandler({ NoHandlerFoundException.class, EntityNotFoundException.class })

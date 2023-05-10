@@ -38,20 +38,16 @@ public class JWTAuthenticationTest {
 
     @Test
     public void doFilterInternalMustVaidatePassedToken() throws Exception {
-
         // TO DO
-
     }
 
     @Test
     public void validUserLoginMustReturnAuthToken() throws Exception {
-        //TO DO
+        // TO DO
     }
 
     @Test
     public void invalidUserLoginMustReturnUnauthorizedStatus() throws Exception {
-
         // TO DO
-
     }
 }

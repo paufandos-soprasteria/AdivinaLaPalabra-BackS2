@@ -4,8 +4,11 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRang
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,13 +21,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.List;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.AuthHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -42,55 +48,90 @@ public class GameServiceImplTest {
     @Mock
     WordRepository wordRepository;
 
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    UserServiceImpl userServiceImpl;
+
+    @Mock
+    JwtUtils jwtUtils;
+
     @Captor
     ArgumentCaptor<Game> captor;
 
     @Test
     void testNewGameMustReturnAnInt() {
-        final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
-        final Game SAVE_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY);
+        final Game NEW_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY, DEFAULT_USER);
+        final Game SAVE_GAME = new Game(EXISTING_WORD_IN_THE_DICTIONARY, DEFAULT_USER);
         SAVE_GAME.setId(GAME_ID);
         NEW_GAME.setId(GAME_ID);
 
         when(wordRepository.getReferenceById(anyInt())).thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
+        when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
+        when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
 
-        gameService.newGame();
+        gameService.newGame(DEFAULT_USERNAME);
         Game saveGame = captor.getValue();
-        assertEquals(EXISTING_WORD_IN_THE_DICTIONARY,saveGame.getCorrectWord());
+
+        assertEquals(EXISTING_WORD_IN_THE_DICTIONARY, saveGame.getCorrectWord());
     }
 
     @Test
     void testGetCorrectWordMustReturnCorrectWord() {
-        Game game = new Game(GAME_ID,EXISTING_WORD_IN_THE_DICTIONARY);
-
+        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
+        Game game = new Game(GAME_ID, EXISTING_WORD_IN_THE_DICTIONARY);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
 
-        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
         CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
-        assertEquals(EXPEXTED_WORD.correctWord(),correctWordDTO.correctWord());
+
+        assertEquals(EXPEXTED_WORD.correctWord(), correctWordDTO.correctWord());
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"1,true","4,true","5,false","10,false"})
-    void testCheckFiveAttemptsMustReturnInRange(int attemptNumber,boolean expectedResult) {
+    @CsvSource(value = { "1,true", "4,true", "5,false", "10,false" })
+    void testCheckFiveAttemptsMustReturnInRange(int attemptNumber, boolean expectedResult) {
         final CheckAttemptsInRangeDTO EXPECTED_DTO = new CheckAttemptsInRangeDTO(expectedResult);
         Game game = new Game(GAME_ID);
         game.setAttempts(attemptNumber);
-
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
 
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
+
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
     }
 
     @Test
-    void testGetLastTenGames() {
-        when(gameRepository.findTop10ByOrderByDateDesc()).thenReturn(EXPECTED_GAME_LIST);
+    void testGetLastTenGamesMustReturnLastTenGames() {
+         when(gameRepository.findTop10ByUser_IdOrderByDateDesc(DEFAULT_USER.getId())).thenReturn(EXPECTED_GAME_LIST);
+         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
+         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
+         
+         List<GameHistoryDTO> list = gameService.getLastTenGames(DEFAULT_USERNAME);
 
-        List<GameHistoryDTO> list = gameService.getLastTenGames();
+         assertEquals(list.size(),EXPECTED_GAME_HISTORY_LIST.size());
+    }
 
-        assertEquals(list.size(),EXPECTED_GAME_HISTORY_LIST.size());
+    @Test
+    void testGetAllGamesMustReturnAllGames() throws InsufficientGamesException{
+         when(gameRepository.countByUser_Id(GAME_ID)).thenReturn(1L);
+         when(gameRepository.findAllByUser_Id(DEFAULT_USER.getId())).thenReturn(EXPECTED_ALL_GAME_LIST);
+         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
+         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
+         
+         List<GameHistoryDTO> list = gameService.getAllGames(DEFAULT_USERNAME);
+
+         assertEquals(list.size(), EXPECTED_ALL_GAME_LIST.size());
+    }
+
+    @Test
+    void testGetAllGamesWithNoEnoughGamesMustReturnInsufficientGamesException() throws InsufficientGamesException {
+        when(gameRepository.countByUser_Id(GAME_ID)).thenReturn(0L);
+        when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
+        
+        assertThatThrownBy(() -> gameService.checkIfUserHasEnoughGames(DEFAULT_USERNAME))
+                .isInstanceOf(InsufficientGamesException.class);
     }
 }

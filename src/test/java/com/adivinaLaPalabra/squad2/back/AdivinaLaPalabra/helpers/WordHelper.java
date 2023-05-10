@@ -1,12 +1,15 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
 
 public class WordHelper {
 
-    public static final String VALIDATE_POSITIONS_URL = "/validatePositions/{game_id}";
+    public static final String VALIDATE_POSITIONS_URL = "/validatePositions/";
 
     public static final String CHECK_IF_WORD_EXISTS_URL = "/checkIfWordExists/word";
+
+    public static final ValidatePositionsRequest POSITIONS_REQUEST = new ValidatePositionsRequest('a', 'b', 'a', 'c', 'a');
 
     public static final String EXISTENT_WORD = "abaca";
     public static final Word EXISTING_WORD_IN_THE_DICTIONARY = new Word(1, EXISTENT_WORD);

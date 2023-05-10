@@ -8,6 +8,10 @@ import java.util.UUID;
 
 public interface GameRepository extends JpaRepository<Game, UUID> {
 
-    public List<Game> findTop10ByOrderByDateDesc();
+    public List<Game> findTop10ByUser_IdOrderByDateDesc(UUID userId);
+
+    public List<Game> findAllByUser_Id(UUID userId); 
+
+    public long countByUser_Id(UUID userId);
 }
 

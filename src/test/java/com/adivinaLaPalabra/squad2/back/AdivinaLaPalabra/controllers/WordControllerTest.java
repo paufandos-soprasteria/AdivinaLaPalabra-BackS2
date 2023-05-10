@@ -16,13 +16,14 @@ import java.util.List;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.UtilsHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
+import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.AuthHelper.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(value = "paufandos")
+@WithMockUser(value = DEFAULT_USERNAME)
 public class WordControllerTest {
         @Autowired
         MockMvc mockMvc;
@@ -49,7 +50,7 @@ public class WordControllerTest {
 
                 when(wordService.validatePositions(REQUEST_WORD, GAME_ID)).thenReturn(EXPECTED_LIST);
 
-                this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL, GAME_ID)
+                this.mockMvc.perform(MockMvcRequestBuilders.post(VALIDATE_POSITIONS_URL + GAME_ID)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(asJsonString(requestBody)))
                                 .andExpect(status().isOk())

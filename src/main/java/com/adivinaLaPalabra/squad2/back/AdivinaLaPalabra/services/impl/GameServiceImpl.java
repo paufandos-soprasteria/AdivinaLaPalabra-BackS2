@@ -41,7 +41,7 @@ public class GameServiceImpl implements IGameService {
         int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
 
         Word word = getWord(wordId);
-        User user = getUserByToken(userToken);
+        User user = getUserFromToken(userToken);
 
         return saveNewGame(new Game(word, user));
     }
@@ -61,7 +61,7 @@ public class GameServiceImpl implements IGameService {
 
     @Override
     public List<GameHistoryDTO> getLastTenGames(String userToken) {
-        UUID userId = getUserByToken(userToken).getId();
+        UUID userId = getUserFromToken(userToken).getId();
         List<Game> games = gameRepository.findTop10ByUser_IdOrderByDateDesc(userId);
         return serializeToDTO(games);
     }
@@ -77,6 +77,23 @@ public class GameServiceImpl implements IGameService {
         return gameRepository.save(newGame);
     }
 
+    private boolean hasMoreThanTenGames(String userToken) {
+        UUID userId = getUserFromToken(userToken).getId();
+        return gameRepository.findAllByUser_Id(userId).size() > MAX_GAMES_SIZE;
+    }
+
+    private UUID getIdIfHasMoreThan10Games(String userToken) throws InsufficientGamesException {
+        if (!hasMoreThanTenGames(userToken))
+            throw new InsufficientGamesException();
+        return getUserFromToken(userToken).getId();
+    }
+
+    private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
+        List<GameHistoryDTO> gamesDTO = new ArrayList<>();
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.isWinned(), game.getAttempts())));
+        return gamesDTO;
+    }
+
     private int getDictionarySize() {
         return (int) wordRepository.count();
     }
@@ -85,28 +102,12 @@ public class GameServiceImpl implements IGameService {
         return wordRepository.getReferenceById(wordId);
     }
 
-    private boolean hasMoreThanTenGames(String userToken) {
-        UUID userId = getUserByToken(userToken).getId();
-        return gameRepository.findAllByUser_Id(userId).size() > MAX_GAMES_SIZE;
-    }
-
-    private User getUserByToken(String userToken) {
-        String username = jwtUtils.getUserFromToken(userToken);
+    private User getUserFromToken(String userToken) {
+        String username = jwtUtils.getUsernameFromAuthHeader(userToken);
         User user = userRepository.findByName(username);
         if (user == null)
             throw new EntityNotFoundException("No se ha encontrado el usuario con el nombre" + username);
         return user;
-    }
-
-    private UUID getIdIfHasMoreThan10Games(String userToken) throws InsufficientGamesException {
-        if (!hasMoreThanTenGames(userToken)) throw new InsufficientGamesException();
-        return getUserByToken(userToken).getId();
-    }
-
-    private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
-        List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.isWinned(), game.getAttempts())));
-        return gamesDTO;
     }
 
 }

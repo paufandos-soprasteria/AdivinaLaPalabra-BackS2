@@ -23,35 +23,38 @@ public class GameController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private ErrorResponseDTO handleDatabaseExceptions(InvalidDataAccessResourceUsageException e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ha habido un fallo al generar la partida, ya se ve lo loser que eres. Recarga anda.");
+        return new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ha habido un fallo al generar la partida, ya se ve lo loser que eres. Recarga anda.");
     }
 
     @GetMapping("/newGame")
-    private GameDTO newGame(@RequestHeader (name="Authorization") String token) {
+    private GameDTO newGame(@RequestHeader(name = "Authorization") String token) {
         log.info("Request to newGame");
         return new GameDTO(gameService.newGame(token).getId());
     }
 
     @GetMapping("/getCorrectWord/{game_id}")
     private CorrectWordDTO getCorrectWord(@PathVariable("game_id") UUID gameId) {
-        log.info("Request to getCorrectWord GameId : "+ gameId);
+        log.info("Request to getCorrectWord GameId : " + gameId);
         return gameService.getCorrectWord(gameId);
-    }
-
-    @GetMapping("/getLastTenGames")
-    private List<GameHistoryDTO> getLastTenGames(@RequestHeader (name="Authorization") String token) throws InsufficientGamesException {
-        log.info("Request to getLastTenGames");
-        return gameService.getLastTenGames(token);
     }
 
     @GetMapping("/checkAttemptsInRange/{game_id}")
     private CheckAttemptsInRangeDTO checkAttemptsInRange(@PathVariable("game_id") UUID gameId) {
-        log.info("Request to checkAttemptsInRange GameId : "+ gameId);
+        log.info("Request to checkAttemptsInRange GameId : " + gameId);
         return gameService.checkFiveAttempts(gameId);
     }
 
+    @GetMapping("/getLastTenGames")
+    private List<GameHistoryDTO> getLastTenGames(@RequestHeader(name = "Authorization") String token)
+            throws InsufficientGamesException {
+        log.info("Request to getLastTenGames");
+        return gameService.getLastTenGames(token);
+    }
+
     @GetMapping("/getAllGames")
-    private List<GameHistoryDTO> getAllGames(@RequestHeader (name="Authorization") String token) throws InsufficientGamesException {
+    private List<GameHistoryDTO> getAllGames(@RequestHeader(name = "Authorization") String token)
+            throws InsufficientGamesException {
         log.info("Request to getLastTenGames");
         return gameService.getAllGames(token);
     }

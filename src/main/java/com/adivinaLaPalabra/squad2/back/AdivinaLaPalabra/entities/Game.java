@@ -7,6 +7,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jdk.jfr.Unsigned;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Game {
 
     @Id
@@ -47,15 +49,6 @@ public class Game {
     @Column(name = "winned")
     private boolean winned;
 
-
-    public Game(Word word, User userId) {
-        this.correctWord = Objects.requireNonNull(word);
-        this.date = DateUtils.generateLocalDateTimeNow();
-        this.attempts = 0;
-        this.winned = false;
-        this.user = userId;
-    }
-
     public Game(UUID id) {
         this.id = id;
     }
@@ -63,5 +56,13 @@ public class Game {
     public Game(UUID gameId, Word correctWord) {
         this.id = gameId;
         this.correctWord = correctWord;
+    }
+
+    public Game(Word word, User userId) {
+        this.correctWord = Objects.requireNonNull(word);
+        this.date = DateUtils.generateLocalDateTimeNow();
+        this.attempts = 0;
+        this.winned = false;
+        this.user = userId;
     }
 }

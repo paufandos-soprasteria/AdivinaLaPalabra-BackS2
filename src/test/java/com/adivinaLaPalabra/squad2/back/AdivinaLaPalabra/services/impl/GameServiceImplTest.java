@@ -4,6 +4,7 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CheckAttemptsInRang
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
@@ -66,7 +67,7 @@ public class GameServiceImplTest {
         when(wordRepository.getReferenceById(anyInt())).thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
-        when(jwtUtils.getUserFromToken(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
+        when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
         when(userRepository.findByName(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
 
         gameService.newGame(AUTH_TOKEN);
@@ -77,10 +78,12 @@ public class GameServiceImplTest {
 
     @Test
     void testGetCorrectWordMustReturnCorrectWord() {
+        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
         Game game = new Game(GAME_ID, EXISTING_WORD_IN_THE_DICTIONARY);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
-        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTING_WORD_IN_THE_DICTIONARY.getValue());
+        
         CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
+
         assertEquals(EXPEXTED_WORD.correctWord(), correctWordDTO.correctWord());
     }
 
@@ -91,17 +94,31 @@ public class GameServiceImplTest {
         Game game = new Game(GAME_ID);
         game.setAttempts(attemptNumber);
         when(gameRepository.getReferenceById(GAME_ID)).thenReturn(game);
+
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
+
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
     }
 
     @Test
-    void testGetLastTenGames() {
+    void testGetLastTenGamesMustReturnLastTenGames() {
          when(gameRepository.findTop10ByUser_IdOrderByDateDesc(DEFAULT_USER.getId())).thenReturn(EXPECTED_GAME_LIST);
-         when(jwtUtils.getUserFromToken(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
+         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
          when(userRepository.findByName(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
          
          List<GameHistoryDTO> list = gameService.getLastTenGames(AUTH_TOKEN);
+
          assertEquals(list.size(),EXPECTED_GAME_HISTORY_LIST.size());
+    }
+
+    @Test
+    void testGetAllGamesMustReturnAllGames() throws InsufficientGamesException{
+         when(gameRepository.findAllByUser_Id(DEFAULT_USER.getId())).thenReturn(EXPECTED_ALL_GAME_LIST);
+         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
+         when(userRepository.findByName(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
+         
+         List<GameHistoryDTO> list = gameService.getAllGames(AUTH_TOKEN);
+
+         assertTrue(list.size() > 10);
     }
 }

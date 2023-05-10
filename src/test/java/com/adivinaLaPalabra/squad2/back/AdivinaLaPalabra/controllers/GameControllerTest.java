@@ -50,8 +50,9 @@ public class GameControllerTest {
 
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
-        when(gameService.newGame(USER_REQUEST_DTO.getName())).thenReturn(GAME);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL))
+        when(gameService.newGame(AUTH_TOKEN)).thenReturn(GAME);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL)
+                .header("Authorization", AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().json(NEW_GAME_EXPECTED_DATA));
     }
@@ -89,8 +90,9 @@ public class GameControllerTest {
 
     @Test
     void testEndpointGetLastTenGames() throws Exception {
-        when(gameService.getLastTenGames(USER_REQUEST_DTO.getName())).thenReturn(EXPECTED_GAME_HISTORY_LIST);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL))
+        when(gameService.getLastTenGames(AUTH_TOKEN)).thenReturn(EXPECTED_GAME_HISTORY_LIST);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL)
+                .header("Authorization", AUTH_TOKEN))
                 .andExpect(status().isOk());
     }
 }

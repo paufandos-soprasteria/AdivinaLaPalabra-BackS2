@@ -21,16 +21,10 @@ import org.w3c.dom.ranges.RangeException;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({ InsufficientGamesException.class })
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    private ErrorResponseDTO handleInsufficientGamesException(InsufficientGamesException e) {
-        e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage());
-    }
 
-    @ExceptionHandler({ GameIsWinnedException.class })
+    @ExceptionHandler({ GameIsWinnedException.class, InsufficientGamesException.class })
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    private ErrorResponseDTO handleGameIsWinnedException(GameIsWinnedException e) {
+    private ErrorResponseDTO handleGameIsWinnedException(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.NOT_ACCEPTABLE.value(), e.getMessage());
     }
@@ -39,12 +33,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
     private ErrorResponseDTO handleRangeException(RangeException e) {
         e.printStackTrace();
-        return new ErrorResponseDTO(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(),"Ha pasado el límite de intentos.");
+        return new ErrorResponseDTO(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value(),
+                "Ha pasado el límite de intentos.");
     }
 
     @ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    private ErrorResponseDTO handleBadCredentialsException(BadCredentialsException e) {
+    private ErrorResponseDTO handleBadCredentialsException(Exception e) {
         e.printStackTrace();
         return new ErrorResponseDTO(HttpStatus.UNAUTHORIZED.value(), "El usuario y/o la contraseña no son correctos.");
     }

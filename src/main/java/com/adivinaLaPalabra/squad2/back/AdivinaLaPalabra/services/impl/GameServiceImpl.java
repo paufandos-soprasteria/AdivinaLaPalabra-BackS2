@@ -30,18 +30,15 @@ public class GameServiceImpl implements IGameService {
     private WordRepository wordRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    private UserServiceImpl userServiceImpl ;
 
     @Override
-    public Game newGame(String userToken) {
+    public Game newGame(String username) {
         int dictionarySize = getDictionarySize();
         int wordId = NumberUtils.generateRandomNumberInRange(dictionarySize);
 
         Word word = getWord(wordId);
-        User user = getUserByToken(userToken);
+        User user = userServiceImpl.getUserByUsername(username);
 
         return saveNewGame(new Game(word, user));
     }
@@ -60,28 +57,44 @@ public class GameServiceImpl implements IGameService {
     }
 
     @Override
-    public List<GameHistoryDTO> getLastTenGames(String userToken) {
-        UUID userId = getUserByToken(userToken).getId();
+    public List<GameHistoryDTO> getLastTenGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
         List<Game> games = gameRepository.findTop10ByUser_IdOrderByDateDesc(userId);
         return serializeToDTO(games);
     }
 
     @Override
-    public List<GameHistoryDTO> getTopThreeGames(String userToken) {
-        UUID userId = getUserByToken(userToken).getId();
+    public List<GameHistoryDTO> getTopThreeGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
         List<Game> games = gameRepository.getTop3UserGames(userId);
         return serializeToDTO(games);
     }
 
     @Override
-    public List<GameHistoryDTO> getAllGames(String userToken) throws InsufficientGamesException {
-        UUID userId = getIdIfHasMoreThan10Games(userToken);
+    public List<GameHistoryDTO> getAllGames(String username) throws InsufficientGamesException {
+        checkIfUserHasEnoughGames(username);
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
         List<Game> games = gameRepository.findAllByUser_Id(userId);
         return serializeToDTO(games);
     }
 
     private Game saveNewGame(Game newGame) {
         return gameRepository.save(newGame);
+    }
+
+    private boolean hasEnoughGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
+        return gameRepository.countByUser_Id(userId) > MAX_GAMES_SIZE;
+    }
+
+    public void checkIfUserHasEnoughGames(String username) throws InsufficientGamesException {
+        if (!hasEnoughGames(username)) throw new InsufficientGamesException();
+    }
+
+    private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
+        List<GameHistoryDTO> gamesDTO = new ArrayList<>();
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.getWinned(), game.getAttempts())));
+        return gamesDTO;
     }
 
     private int getDictionarySize() {
@@ -91,30 +104,4 @@ public class GameServiceImpl implements IGameService {
     private Word getWord(int wordId) {
         return wordRepository.getReferenceById(wordId);
     }
-
-    private boolean hasMoreThanTenGames(String userToken) {
-        UUID userId = getUserByToken(userToken).getId();
-        return gameRepository.findAllByUser_Id(userId).size() > MAX_GAMES_SIZE;
-    }
-
-    private User getUserByToken(String userToken) {
-        String username = jwtUtils.getUserFromToken(userToken);
-        User user = userRepository.findByName(username);
-        if (user == null)
-            throw new EntityNotFoundException("No se ha encontrado el usuario con el nombre" + username);
-        return user;
-    }
-
-    private UUID getIdIfHasMoreThan10Games(String userToken) throws InsufficientGamesException {
-        if (!hasMoreThanTenGames(userToken)) throw new InsufficientGamesException();
-        return getUserByToken(userToken).getId();
-    }
-
-    private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
-        List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.getWinned(), game.getAttempts())));
-        return gamesDTO;
-
-    }
-
 }

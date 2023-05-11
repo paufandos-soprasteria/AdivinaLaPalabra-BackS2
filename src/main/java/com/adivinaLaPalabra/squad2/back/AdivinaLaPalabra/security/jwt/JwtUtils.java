@@ -15,6 +15,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 @Component
 public class JwtUtils {
+
+    private final int AUTH_BEARER_FIELD_SIZE = 7;
+
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -43,10 +46,12 @@ public class JwtUtils {
         return jwt.getClaim("user").asString();
     }
 
-    public String getUserFromToken(String jwt){
-        String token = jwt.substring(7, jwt.length());
+    public String getUsernameFromAuthHeader(String authHeader){
+        String token = getTokenFromHeader(authHeader);
         String username = validateTokenAndRetrieveSubject(token);
         return Base64Utils.decode(username);
     }
-
+    private String getTokenFromHeader(String authHeader){
+        return authHeader.substring(AUTH_BEARER_FIELD_SIZE, authHeader.length());
+    }
 }

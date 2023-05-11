@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(value = "paufandos")
+@WithMockUser(value = DEFAULT_USERNAME)
 public class GameControllerTest {
 
     @Autowired
@@ -50,11 +50,24 @@ public class GameControllerTest {
 
     @Test
     void testEndpointNewGameMustReturnOK() throws Exception {
-        when(gameService.newGame(AUTH_TOKEN)).thenReturn(GAME);
+        when(gameService.newGame(DEFAULT_USERNAME)).thenReturn(GAME);
+
         this.mockMvc.perform(MockMvcRequestBuilders.get(NEW_GAME_URL)
-                .header("Authorization", AUTH_TOKEN))
+                .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
                 .andExpect(status().isOk())
                 .andExpect(content().json(NEW_GAME_EXPECTED_DATA));
+    }
+
+    @Test
+    void testGetCorrectWordMustReturnCorrectWord() throws Exception {
+        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTENT_WORD);
+        when(gameService.getCorrectWord(GAME_ID)).thenReturn(new CorrectWordDTO(EXISTENT_WORD));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_CORRECT_WORD_URL + GAME_ID))
+                .andExpect(status().isOk());
+        CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
+
+        assertEquals(EXPEXTED_WORD.correctWord(), correctWordDTO.correctWord());
     }
 
     @Test
@@ -64,15 +77,29 @@ public class GameControllerTest {
     }
 
     @Test
-    void testGetCorrectWordMustReturnCorrectWord() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_CORRECT_WORD_URL + GAME_ID))
+    void testEndpointGetTopThreeGames() throws Exception {
+        when(gameService.getTopThreeGames(DEFAULT_USERNAME)).thenReturn(EXPECTED_TOP3_GAME_HISTORY_LIST);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_TOP3_GAMES_URL)
+                        .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
                 .andExpect(status().isOk());
+    }
 
-        when(gameService.getCorrectWord(GAME_ID)).thenReturn(new CorrectWordDTO(EXISTENT_WORD));
+    @Test
+    void testEndpointGetLastTenGames() throws Exception {
+        when(gameService.getLastTenGames(DEFAULT_USERNAME)).thenReturn(EXPECTED_GAME_HISTORY_LIST);
 
-        final CorrectWordDTO EXPEXTED_WORD = new CorrectWordDTO(EXISTENT_WORD);
-        CorrectWordDTO correctWordDTO = gameService.getCorrectWord(GAME_ID);
-        assertEquals(EXPEXTED_WORD.correctWord(), correctWordDTO.correctWord());
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL)
+                .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testEndpointGetAllGamesMustReturnOkStatus() throws Exception {
+        when(gameService.getAllGames(DEFAULT_USERNAME)).thenReturn(EXPECTED_GAME_HISTORY_LIST);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_ALL_GAMES_URL)
+                .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
+                .andExpect(status().isOk());
     }
 
     @ParameterizedTest
@@ -86,21 +113,5 @@ public class GameControllerTest {
 
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
-    }
-
-    @Test
-    void testEndpointGetLastTenGames() throws Exception {
-        when(gameService.getLastTenGames(AUTH_TOKEN)).thenReturn(EXPECTED_GAME_HISTORY_LIST);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_LAST_TEN_GAMES_URL)
-                .header("Authorization", AUTH_TOKEN))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void testEndpointGetTopThreeGames() throws Exception {
-        when(gameService.getTopThreeGames(AUTH_TOKEN)).thenReturn(EXPECTED_TOP3_GAME_HISTORY_LIST);
-        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_TOP3_GAMES_URL)
-                        .header("Authorization", AUTH_TOKEN))
-                .andExpect(status().isOk());
     }
 }

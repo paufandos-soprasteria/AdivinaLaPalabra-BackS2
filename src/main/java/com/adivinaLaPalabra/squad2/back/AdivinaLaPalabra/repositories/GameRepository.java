@@ -15,6 +15,8 @@ public interface GameRepository extends JpaRepository<Game, UUID> {
     @Query("SELECT g FROM Game g WHERE g.user.id = ?1 and g.winned = true ORDER BY g.attempts ASC LIMIT 3")
     public List<Game> getTop3UserGames(UUID userId);
 
-    public List<Game> findAllByUser_Id(UUID userId); 
+    public List<Game> findAllByUser_Id(UUID userId);
+
+    public long countByUser_Id(UUID userId);
 }
 

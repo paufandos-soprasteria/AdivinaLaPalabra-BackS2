@@ -104,4 +104,14 @@ public class GameServiceImplTest {
          List<GameHistoryDTO> list = gameService.getLastTenGames(AUTH_TOKEN);
          assertEquals(list.size(),EXPECTED_GAME_HISTORY_LIST.size());
     }
+
+    @Test
+    void testGetTop3Games() {
+        when(gameRepository.getTop3UserGames(DEFAULT_USER.getId())).thenReturn(EXPECTED_TOP3_GAME_LIST);
+        when(jwtUtils.getUserFromToken(AUTH_TOKEN)).thenReturn(DEFAULT_USERNAME);
+        when(userRepository.findByName(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
+
+        List<GameHistoryDTO> list = gameService.getTopThreeGames(AUTH_TOKEN);
+        assertEquals(list.size(),EXPECTED_TOP3_GAME_HISTORY_LIST.size());
+    }
 }

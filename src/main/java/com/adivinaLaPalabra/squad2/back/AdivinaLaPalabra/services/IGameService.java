@@ -19,5 +19,7 @@ public interface IGameService {
 
     public List<GameHistoryDTO> getLastTenGames(String userToken);
 
+    List<GameHistoryDTO> getTopThreeGames(String userToken);
+
     public List<GameHistoryDTO> getAllGames(String userToken) throws InsufficientGamesException;
 }

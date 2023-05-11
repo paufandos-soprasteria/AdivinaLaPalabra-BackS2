@@ -45,7 +45,7 @@ public class Game {
 
     @JsonIgnore
     @Column(name = "winned")
-    private boolean winned;
+    private Boolean winned;
 
 
     public Game(Word word, User userId) {

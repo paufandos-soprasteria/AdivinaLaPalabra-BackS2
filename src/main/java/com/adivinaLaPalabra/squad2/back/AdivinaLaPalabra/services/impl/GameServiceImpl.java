@@ -67,6 +67,13 @@ public class GameServiceImpl implements IGameService {
     }
 
     @Override
+    public List<GameHistoryDTO> getTopThreeGames(String userToken) {
+        UUID userId = getUserByToken(userToken).getId();
+        List<Game> games = gameRepository.getTop3UserGames(userId);
+        return serializeToDTO(games);
+    }
+
+    @Override
     public List<GameHistoryDTO> getAllGames(String userToken) throws InsufficientGamesException {
         UUID userId = getIdIfHasMoreThan10Games(userToken);
         List<Game> games = gameRepository.findAllByUser_Id(userId);
@@ -105,8 +112,9 @@ public class GameServiceImpl implements IGameService {
 
     private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.isWinned(), game.getAttempts())));
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.getWinned(), game.getAttempts())));
         return gamesDTO;
+
     }
 
 }

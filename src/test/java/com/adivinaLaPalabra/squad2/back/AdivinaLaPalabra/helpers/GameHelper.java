@@ -14,6 +14,8 @@ public class GameHelper {
 
     public static final String GET_LAST_TEN_GAMES_URL = "/getLastTenGames";
 
+    public static final String GET_TOP3_GAMES_URL = "/getTopThreeGames";
+
     public static final String NEW_GAME_URL = "/newGame";
 
     public static UUID GAME_ID = UUID.randomUUID();
@@ -26,6 +28,17 @@ public class GameHelper {
             new Game(),
             new Game(),
             new Game());
+
+    public static final List<Game> EXPECTED_TOP3_GAME_LIST = List.of(
+            new Game(),
+            new Game(),
+            new Game());
+
+
+    public static final List<GameHistoryDTO> EXPECTED_TOP3_GAME_HISTORY_LIST = List.of(
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true, 5),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true,2 ),
+            new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true, 1));
 
     public static final List<GameHistoryDTO> EXPECTED_GAME_HISTORY_LIST = List.of(
             new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true, 5),

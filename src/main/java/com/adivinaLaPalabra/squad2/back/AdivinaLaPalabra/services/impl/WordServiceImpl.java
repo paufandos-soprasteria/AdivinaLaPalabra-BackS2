@@ -41,7 +41,7 @@ public class WordServiceImpl implements IWordService {
         checkIfIsBadWord(requestWord);
         Game game = gameRepository.getReferenceById(gameId);
 
-        if (game.isWinned()) throw new GameIsWinnedException();
+        if (game.getWinned()) throw new GameIsWinnedException();
         List<LetterDTO> letters = new ArrayList<>();
         checkAttemptsInRange(game,game.getAttempts());
         String correctWord = game.getCorrectWord().getValue();

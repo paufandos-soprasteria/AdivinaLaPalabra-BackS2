@@ -95,4 +95,12 @@ public class GameControllerTest {
                 .header("Authorization", AUTH_TOKEN))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void testEndpointGetTopThreeGames() throws Exception {
+        when(gameService.getTopThreeGames(AUTH_TOKEN)).thenReturn(EXPECTED_TOP3_GAME_HISTORY_LIST);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_TOP3_GAMES_URL)
+                        .header("Authorization", AUTH_TOKEN))
+                .andExpect(status().isOk());
+    }
 }

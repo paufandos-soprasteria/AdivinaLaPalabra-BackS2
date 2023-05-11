@@ -44,6 +44,12 @@ public class GameController {
         return gameService.getLastTenGames(token);
     }
 
+    @GetMapping("/getTopThreeGames")
+    private List<GameHistoryDTO> getTopThreeGames(@RequestHeader (name="Authorization") String token) throws InsufficientGamesException {
+        log.info("Request to getTopThreeGames");
+        return gameService.getTopThreeGames(token);
+    }
+
     @GetMapping("/checkAttemptsInRange/{game_id}")
     private CheckAttemptsInRangeDTO checkAttemptsInRange(@PathVariable("game_id") UUID gameId) {
         log.info("Request to checkAttemptsInRange GameId : "+ gameId);
@@ -52,7 +58,7 @@ public class GameController {
 
     @GetMapping("/getAllGames")
     private List<GameHistoryDTO> getAllGames(@RequestHeader (name="Authorization") String token) throws InsufficientGamesException {
-        log.info("Request to getLastTenGames");
+        log.info("Request to getAllGames");
         return gameService.getAllGames(token);
     }
 }

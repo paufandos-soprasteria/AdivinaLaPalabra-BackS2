@@ -51,9 +51,7 @@ public class JwtUtils {
         String username = validateTokenAndRetrieveSubject(token);
         return Base64Utils.decode(username);
     }
-
     private String getTokenFromHeader(String authHeader){
         return authHeader.substring(AUTH_BEARER_FIELD_SIZE, authHeader.length());
     }
-
 }

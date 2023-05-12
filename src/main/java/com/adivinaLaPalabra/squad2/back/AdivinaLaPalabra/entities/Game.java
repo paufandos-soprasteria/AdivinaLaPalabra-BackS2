@@ -47,7 +47,7 @@ public class Game {
 
     @JsonIgnore
     @Column(name = "winned")
-    private boolean winned;
+    private Boolean winned = false ;
 
     public Game(UUID id) {
         this.id = id;
@@ -62,7 +62,6 @@ public class Game {
         this.correctWord = Objects.requireNonNull(word);
         this.date = DateUtils.generateLocalDateTimeNow();
         this.attempts = 0;
-        this.winned = false;
         this.user = user;
     }
 }

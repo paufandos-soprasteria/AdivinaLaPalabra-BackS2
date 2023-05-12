@@ -20,6 +20,8 @@ public class GameServiceImpl implements IGameService {
 
     private final int MAX_GAMES_SIZE = 10;
 
+    private final int MIN_GAME_ATTEMPTS_TO_BE_SHOWED = 0;
+
     @Autowired
     private GameRepository gameRepository;
 
@@ -56,7 +58,14 @@ public class GameServiceImpl implements IGameService {
     @Override
     public List<GameHistoryDTO> getLastTenGames(String username) {
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        List<Game> games = gameRepository.findTop10ByUser_IdOrderByDateDesc(userId);
+        List<Game> games = gameRepository.findTop10ByUser_IdAndAttemptsGreaterThanOrderByDateDesc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
+        return serializeToDTO(games);
+    }
+
+    @Override
+    public List<GameHistoryDTO> getTopThreeGames(String username) {
+        UUID userId = userServiceImpl.getUserByUsername(username).getId();
+        List<Game> games = gameRepository.findTop3ByUser_IdAndWinnedTrueAndAttemptsGreaterThanOrderByAttemptsAsc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
         return serializeToDTO(games);
     }
 
@@ -64,7 +73,7 @@ public class GameServiceImpl implements IGameService {
     public List<GameHistoryDTO> getAllGames(String username) throws InsufficientGamesException {
         checkIfUserHasEnoughGames(username);
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        List<Game> games = gameRepository.findAllByUser_Id(userId);
+        List<Game> games = gameRepository.findAllByUser_IdAndAttemptsGreaterThanOrderByDateDesc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
         return serializeToDTO(games);
     }
 
@@ -74,7 +83,7 @@ public class GameServiceImpl implements IGameService {
 
     private boolean hasEnoughGames(String username) {
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        return gameRepository.countByUser_Id(userId) > MAX_GAMES_SIZE;
+        return gameRepository.countByUser_IdAndAttemptsGreaterThan(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED) > MAX_GAMES_SIZE;
     }
 
     public void checkIfUserHasEnoughGames(String username) throws InsufficientGamesException {
@@ -83,7 +92,7 @@ public class GameServiceImpl implements IGameService {
 
     private List<GameHistoryDTO> serializeToDTO(List<Game> games) {
         List<GameHistoryDTO> gamesDTO = new ArrayList<>();
-        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.isWinned(), game.getAttempts())));
+        games.forEach(game -> gamesDTO.add(new GameHistoryDTO(game.getDate(), game.getWinned(), game.getAttempts())));
         return gamesDTO;
     }
 

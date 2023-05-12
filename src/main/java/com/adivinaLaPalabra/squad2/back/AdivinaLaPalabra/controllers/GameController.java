@@ -22,7 +22,6 @@ public class GameController {
 
     @Autowired
     private JwtUtils jwtUtils;
-
     @ExceptionHandler({ InvalidDataAccessResourceUsageException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private ErrorResponseDTO handleDatabaseExceptions(InvalidDataAccessResourceUsageException e) {
@@ -32,6 +31,7 @@ public class GameController {
     }
 
     @GetMapping("/newGame")
+
     private GameDTO newGame(@RequestHeader(name = "Authorization") String authHeader) {
         log.info("Request to newGame");
         String username = jwtUtils.getUsernameFromAuthHeader(authHeader);
@@ -42,6 +42,13 @@ public class GameController {
     private CorrectWordDTO getCorrectWord(@PathVariable("game_id") UUID gameId) {
         log.info("Request to getCorrectWord GameId : " + gameId);
         return gameService.getCorrectWord(gameId);
+    }
+
+    @GetMapping("/getTopThreeGames")
+    private List<GameHistoryDTO> getTopThreeGames(@RequestHeader (name="Authorization") String authHeader) throws InsufficientGamesException {
+        log.info("Request to getTopThreeGames");
+        String username = jwtUtils.getUsernameFromAuthHeader(authHeader);
+        return gameService.getTopThreeGames(username);
     }
 
     @GetMapping("/checkAttemptsInRange/{game_id}")

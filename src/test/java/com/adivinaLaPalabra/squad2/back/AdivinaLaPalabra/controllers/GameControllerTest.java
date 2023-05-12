@@ -77,6 +77,14 @@ public class GameControllerTest {
     }
 
     @Test
+    void testEndpointGetTopThreeGames() throws Exception {
+        when(gameService.getTopThreeGames(DEFAULT_USERNAME)).thenReturn(EXPECTED_TOP3_GAME_HISTORY_LIST);
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_TOP3_GAMES_URL)
+                        .header(AUTH_HEADER, AUTH_TOKEN_HEADER))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void testEndpointGetLastTenGames() throws Exception {
         when(gameService.getLastTenGames(DEFAULT_USERNAME)).thenReturn(EXPECTED_GAME_HISTORY_LIST);
 
@@ -106,5 +114,4 @@ public class GameControllerTest {
         CheckAttemptsInRangeDTO checkAttemptsInRangeDTO = gameService.checkFiveAttempts(GAME_ID);
         assertThat(checkAttemptsInRangeDTO).usingRecursiveComparison().isEqualTo(EXPECTED_DTO);
     }
-
 }

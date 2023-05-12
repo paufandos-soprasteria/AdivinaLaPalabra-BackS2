@@ -18,6 +18,8 @@ public class AuthHelper {
 
     public static final String BASE64_PASSWORD = "MTIzNDU2";
 
+    public static final User USER = new User(BASE64_USERNAME,BASE64_PASSWORD);
+
     public static final LoginDTO USER_REQUEST_DTO = new LoginDTO(BASE64_USERNAME, BASE64_PASSWORD);
 
     public static final LoginDTO USER_REQUEST_BODY = new LoginDTO("Y0dGMVptRnVaRzl6", "TVRJek5EVTI=");

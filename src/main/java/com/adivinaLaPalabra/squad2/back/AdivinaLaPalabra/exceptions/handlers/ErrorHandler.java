@@ -21,6 +21,7 @@ import org.w3c.dom.ranges.RangeException;
 @RestControllerAdvice
 public class ErrorHandler {
 
+
     @ExceptionHandler({ GameIsWinnedException.class, InsufficientGamesException.class })
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     private ErrorResponseDTO handleGameIsWinnedException(Exception e) {

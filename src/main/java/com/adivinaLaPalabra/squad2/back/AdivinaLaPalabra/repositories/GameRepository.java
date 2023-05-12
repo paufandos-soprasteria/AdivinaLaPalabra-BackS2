@@ -2,7 +2,6 @@ package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories;
 
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.UUID;
 

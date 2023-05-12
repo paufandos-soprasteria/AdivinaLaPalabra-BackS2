@@ -5,12 +5,10 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.CorrectWordDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.GameHistoryDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.InsufficientGamesException;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,7 +99,7 @@ public class GameServiceImplTest {
 
     @Test
     void testGetTop3Games() {
-        when(gameRepository.getTop3UserGames(DEFAULT_USER.getId())).thenReturn(EXPECTED_TOP3_GAME_LIST);
+        when(gameRepository.findTop3ByUser_IdAndWinnedTrueAndAttemptsGreaterThanOrderByAttemptsAsc(DEFAULT_USER.getId(), 0)).thenReturn(EXPECTED_TOP3_GAME_LIST);
         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
 
         List<GameHistoryDTO> list = gameService.getTopThreeGames(DEFAULT_USERNAME);
@@ -110,7 +108,7 @@ public class GameServiceImplTest {
 
         @Test
     void testGetLastTenGamesMustReturnLastTenGames() {
-         when(gameRepository.findTop10ByUser_IdOrderByDateDesc(DEFAULT_USER.getId())).thenReturn(EXPECTED_GAME_LIST);
+         when(gameRepository.findTop10ByUser_IdAndAttemptsGreaterThanOrderByDateDesc(DEFAULT_USER.getId(), 0)).thenReturn(EXPECTED_GAME_LIST);
          when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
          
          List<GameHistoryDTO> list = gameService.getLastTenGames(DEFAULT_USERNAME);
@@ -120,7 +118,6 @@ public class GameServiceImplTest {
 
     @Test
     void testGetAllGamesWithNoEnoughGamesMustReturnInsufficientGamesException() throws InsufficientGamesException {
-        List<GameHistoryDTO> list = GameHelper.createGameList(new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true, 5), 12);
         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
         assertThatThrownBy(() -> gameService.getAllGames(DEFAULT_USERNAME))
                 .isInstanceOf(InsufficientGamesException.class)

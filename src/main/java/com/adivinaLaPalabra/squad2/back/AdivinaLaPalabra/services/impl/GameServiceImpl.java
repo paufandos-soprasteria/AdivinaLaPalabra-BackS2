@@ -8,12 +8,9 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.exceptions.Insufficient
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Game;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.User;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.WordRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.GameRepository;
-import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IGameService;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.utilities.NumberUtils;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -22,6 +19,8 @@ import java.util.*;
 public class GameServiceImpl implements IGameService {
 
     private final int MAX_GAMES_SIZE = 10;
+
+    private final int MIN_GAME_ATTEMPTS_TO_BE_SHOWED = 0;
 
     @Autowired
     private GameRepository gameRepository;
@@ -59,14 +58,14 @@ public class GameServiceImpl implements IGameService {
     @Override
     public List<GameHistoryDTO> getLastTenGames(String username) {
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        List<Game> games = gameRepository.findTop10ByUser_IdOrderByDateDesc(userId);
+        List<Game> games = gameRepository.findTop10ByUser_IdAndAttemptsGreaterThanOrderByDateDesc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
         return serializeToDTO(games);
     }
 
     @Override
     public List<GameHistoryDTO> getTopThreeGames(String username) {
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        List<Game> games = gameRepository.getTop3UserGames(userId);
+        List<Game> games = gameRepository.findTop3ByUser_IdAndWinnedTrueAndAttemptsGreaterThanOrderByAttemptsAsc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
         return serializeToDTO(games);
     }
 
@@ -74,7 +73,7 @@ public class GameServiceImpl implements IGameService {
     public List<GameHistoryDTO> getAllGames(String username) throws InsufficientGamesException {
         checkIfUserHasEnoughGames(username);
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        List<Game> games = gameRepository.findAllByUser_Id(userId);
+        List<Game> games = gameRepository.findAllByUser_IdAndAttemptsGreaterThanOrderByDateDesc(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED);
         return serializeToDTO(games);
     }
 
@@ -84,7 +83,7 @@ public class GameServiceImpl implements IGameService {
 
     private boolean hasEnoughGames(String username) {
         UUID userId = userServiceImpl.getUserByUsername(username).getId();
-        return gameRepository.countByUser_Id(userId) > MAX_GAMES_SIZE;
+        return gameRepository.countByUser_IdAndAttemptsGreaterThan(userId,MIN_GAME_ATTEMPTS_TO_BE_SHOWED) > MAX_GAMES_SIZE;
     }
 
     public void checkIfUserHasEnoughGames(String username) throws InsufficientGamesException {

@@ -12,7 +12,6 @@ import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.User;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.repositories.UserRepository;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.security.jwt.JwtUtils;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.services.IUserService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @Service

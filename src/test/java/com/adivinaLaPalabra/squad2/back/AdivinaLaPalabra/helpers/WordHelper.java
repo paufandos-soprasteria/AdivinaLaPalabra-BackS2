@@ -1,7 +1,9 @@
 package com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers;
 
+import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.dto.LetterDTO;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.entities.Word;
 import com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.request.ValidatePositionsRequest;
+import java.util.List;
 
 public class WordHelper {
 
@@ -48,5 +50,14 @@ public class WordHelper {
                 }
             ]
             """;
+
+    public static List<LetterDTO> LETTERDTO_LIST = List.of(
+            new LetterDTO('a', LetterDTO.Status.MATCHED,0),
+            new LetterDTO('b', LetterDTO.Status.MATCHED,1),
+            new LetterDTO('a', LetterDTO.Status.MATCHED,2),
+            new LetterDTO('c', LetterDTO.Status.MATCHED,3),
+            new LetterDTO('a', LetterDTO.Status.MATCHED,4)
+    );
+
 
 }

@@ -58,7 +58,7 @@ public class WordServiceImpl implements IWordService {
         return letters;
     }
 
-    private void checkGameWinned(List<LetterDTO> letters, Game game) {
+    public void checkGameWinned(List<LetterDTO> letters, Game game) {
         if(letters.stream().filter(letter -> letter.getStatus() == Status.MATCHED).count() == 5) {
             game.setWinned(true);
             gameRepository.save(game);

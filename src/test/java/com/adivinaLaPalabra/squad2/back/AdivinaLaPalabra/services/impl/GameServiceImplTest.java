@@ -20,8 +20,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.GameHelper.*;
 import static com.adivinaLaPalabra.squad2.back.AdivinaLaPalabra.helpers.WordHelper.*;
@@ -34,7 +32,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class GameServiceImplTest {
 
     @InjectMocks
@@ -71,7 +68,6 @@ public class GameServiceImplTest {
         when(wordRepository.getReferenceById(anyInt())).thenReturn(EXISTING_WORD_IN_THE_DICTIONARY);
         when(wordRepository.count()).thenReturn(1L);
         when(gameRepository.save(captor.capture())).thenReturn(null);
-        when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
 
         gameService.newGame(DEFAULT_USERNAME);
@@ -106,7 +102,6 @@ public class GameServiceImplTest {
     @Test
     void testGetTop3Games() {
         when(gameRepository.getTop3UserGames(DEFAULT_USER.getId())).thenReturn(EXPECTED_TOP3_GAME_LIST);
-        when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
 
         List<GameHistoryDTO> list = gameService.getTopThreeGames(DEFAULT_USERNAME);
@@ -116,7 +111,6 @@ public class GameServiceImplTest {
         @Test
     void testGetLastTenGamesMustReturnLastTenGames() {
          when(gameRepository.findTop10ByUser_IdOrderByDateDesc(DEFAULT_USER.getId())).thenReturn(EXPECTED_GAME_LIST);
-         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
          when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
          
          List<GameHistoryDTO> list = gameService.getLastTenGames(DEFAULT_USERNAME);
@@ -125,23 +119,11 @@ public class GameServiceImplTest {
     }
 
     @Test
-    void testGetAllGamesMustReturnAllGames() throws InsufficientGamesException{
-         when(gameRepository.countByUser_Id(GAME_ID)).thenReturn(1L);
-         when(gameRepository.findAllByUser_Id(DEFAULT_USER.getId())).thenReturn(EXPECTED_ALL_GAME_LIST);
-         when(jwtUtils.getUsernameFromAuthHeader(AUTH_TOKEN_HEADER)).thenReturn(DEFAULT_USERNAME);
-         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
-
-         List<GameHistoryDTO> list = GameHelper.createGameList(new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(),true,5),12);
-
-         assertEquals(list.size(), EXPECTED_ALL_GAME_LIST.size());
-    }
-
-    @Test
     void testGetAllGamesWithNoEnoughGamesMustReturnInsufficientGamesException() throws InsufficientGamesException {
-        when(gameRepository.countByUser_Id(GAME_ID)).thenReturn(0L);
+        List<GameHistoryDTO> list = GameHelper.createGameList(new GameHistoryDTO(DateUtils.generateLocalDateTimeNow(), true, 5), 12);
         when(userServiceImpl.getUserByUsername(DEFAULT_USERNAME)).thenReturn(DEFAULT_USER);
-        
-        assertThatThrownBy(() -> gameService.checkIfUserHasEnoughGames(DEFAULT_USERNAME))
-                .isInstanceOf(InsufficientGamesException.class);
+        assertThatThrownBy(() -> gameService.getAllGames(DEFAULT_USERNAME))
+                .isInstanceOf(InsufficientGamesException.class)
+                .hasMessageStartingWith("No tiene suficientes partidas");
     }
 }
